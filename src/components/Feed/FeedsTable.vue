@@ -17,7 +17,7 @@
             <button v-if="!alreadySubscribed(feed.id)" class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" @click="subscribe(feed.id)">
               Subscribe
             </button>
-            <button v-if="alreadySubscribed(feed.id)" class="bg-white hover:bg-gray-100 text-red-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" @click="subscribe(feed.id)">
+            <button v-if="alreadySubscribed(feed.id)" class="bg-white hover:bg-gray-100 text-red-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" @click="unsubscribe(feed.id)">
               Unsubscribe
             </button>
           </td>
@@ -41,6 +41,9 @@ export default {
   methods: {
     subscribe: function (id) {
       this.$emit('subscribe', id)
+    },
+    unsubscribe: function (feedId) {
+      this.$emit('unsubscribe', feedId)
     },
     alreadySubscribed: function (id) {
       return this.subscribed.includes(id)

@@ -2,7 +2,7 @@
   <div class="container mx-auto items-center justify-center">
     <add-feed></add-feed>
     <div>
-      <feeds-table @subscribe="subscribe" :feeds="this.getFeeds" :subscribed="this.getSubscribed"></feeds-table>
+      <feeds-table @subscribe="subscribe" @unsubscribe="unsubscribe" :feeds="this.getFeeds" :subscribed="this.getSubscribed"></feeds-table>
     </div>
 
   </div>
@@ -21,13 +21,24 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters(['getFeeds', 'getSubscribed'])
+    ...mapGetters(['getFeeds', 'getSubscribed', 'getUser'])
   },
   methods: {
     ...mapMutations(['setLoading']),
-    ...mapActions(['getFeedsAsync', 'addSubscriptionAsync', 'getUserAsync']),
+    ...mapActions(['getFeedsAsync', 'addSubscriptionAsync', 'deleteSubscriptionAsync', 'getUserAsync']),
     subscribe: async function (id) {
       await this.addSubscriptionAsync(id)
+    },
+    unsubscribe: async function (feedId) {
+      var subs = this.getUser.subscriptions
+      console.log(subs)
+      subs.forEach(async o => {
+        console.log(o)
+        if (o.feed.id === feedId) {
+          await this.deleteSubscriptionAsync(o.id)
+        }
+      })
+      //
     }
   },
   mounted: async function () {

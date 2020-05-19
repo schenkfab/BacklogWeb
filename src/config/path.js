@@ -8,6 +8,9 @@ module.exports = {
   POST_Subscription () {
     return 'https://localhost:44312/api/subscriptions'
   },
+  DELETE_Subscription (id) {
+    return `https://localhost:44312/api/subscriptions/${id}`
+  },
   GET_User () {
     return 'https://localhost:44312/api/users'
   },

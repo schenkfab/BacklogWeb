@@ -148,6 +148,19 @@ export default new Vuex.Store({
         console.log(err)
       }
     },
+    deleteSubscriptionAsync: async ({ dispatch, state }, subscriptionId) => {
+      const options = {
+        headers: { Authorization: `Bearer ${state.token.token}` }
+      }
+
+      try {
+        await axios.delete(_URLs.DELETE_Subscription(subscriptionId), options)
+      } catch (err) {
+        console.log(err)
+      }
+
+      dispatch('getUserAsync')
+    },
     addSubscriptionAsync: async ({ dispatch, state }, feedId) => {
       const options = {
         headers: { Authorization: `Bearer ${state.token.token}` }
