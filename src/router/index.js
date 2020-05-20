@@ -11,8 +11,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home,
-    beforeEnter: authGuard
+    component: Home
   },
   {
     path: '/login',
