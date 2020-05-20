@@ -5,10 +5,12 @@ import store from './store'
 
 import './assets/styles/index.css'
 
-// Auth0:
-import { domain, clientId, audience } from './config/auth0_config.json'
-
 import { Auth0Plugin } from './auth'
+
+// Auth0:
+const domain = process.env.VUE_APP_domain
+const clientId = process.env.VUE_APP_clientId
+const audience = process.env.VUE_APP_audience
 
 Vue.use(Auth0Plugin, {
   domain,

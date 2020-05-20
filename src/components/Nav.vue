@@ -28,6 +28,10 @@ export default {
   },
   computed: {
     ...mapGetters(['getUser'])
+  },
+  mounted () {
+    console.log('test')
+    console.log(process.env)
   }
 }
 </script>
