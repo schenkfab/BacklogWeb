@@ -20,6 +20,8 @@
 import { RssIcon } from 'vue-feather-icons'
 import { mapGetters, mapActions } from 'vuex'
 
+require('dotenv').config()
+
 export default {
   name: 'Nav',
   components: { rss: RssIcon },
