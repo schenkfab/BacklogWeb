@@ -12,11 +12,9 @@ export const authGuard = (to, from, next) => {
   const fn = async () => {
     if (authService.isAuthenticated) {
       if (store.state.user.initialized) {
-        console.log(store.state.user)
         return next()
       } else {
         store.commit('setLoading', true)
-        console.log('loading start')
 
         // make sure the user is already registered inside of the app itself with its this.$auth.user.sub
         const token = await authService.getTokenSilently()
@@ -37,13 +35,12 @@ export const authGuard = (to, from, next) => {
               }
             }
           )
-
           store.commit('setToken', {
             token,
             ...data
           })
         } catch (error) {
-          console.log(Object.keys(error), error.message)
+          console.error(Object.keys(error), error.message)
         }
         store.commit('setLoading', false)
 
