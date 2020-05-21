@@ -7,6 +7,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    error: null,
     loading: false,
     backlog: [],
     toDo: [],
@@ -25,7 +26,8 @@ export default new Vuex.Store({
     getLoading: state => state.loading,
     getFeeds: state => state.feeds,
     getUser: state => state.user,
-    getSubscribed: state => state.subscribed
+    getSubscribed: state => state.subscribed,
+    getError: state => state.error
   },
   mutations: {
     setLoading (state, loading) {
@@ -59,6 +61,9 @@ export default new Vuex.Store({
     },
     setDone (state, d) {
       state.done = d
+    },
+    setError (state, err) {
+      state.error = err
     }
   },
   actions: {
@@ -145,7 +150,7 @@ export default new Vuex.Store({
 
         commit('setSubscribed', subscribed)
       } catch (err) {
-        console.log(err)
+        commit('setError', 'User object cannot be downloaded. Please try again later.')
       }
     },
     deleteSubscriptionAsync: async ({ dispatch, state }, subscriptionId) => {
