@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto items-center justify-center">
+  <div class="container mx-auto items-center justify-center" v-if="this.getUser.initialized">
     <add-feed></add-feed>
     <div>
       <feeds-table @subscribe="subscribe" @unsubscribe="unsubscribe" :feeds="this.getFeeds" :subscribed="this.getSubscribed"></feeds-table>
