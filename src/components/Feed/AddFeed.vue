@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 import Parser from 'rss-parser'
 
 export default {
@@ -57,15 +57,18 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['setLoading']),
     ...mapActions(['addFeedAsync']),
     async addFeed () {
       await this.addFeedAsync({ name: this.title, url: this.url })
       this.created = true
     },
     async getFeed () {
+      this.setLoading(true)
       const parser = new Parser()
       const o = await parser.parseURL(`https://cors-anywhere.herokuapp.com/${this.url}`)
       this.title = o.title
+      this.setLoading(false)
     }
   }
 }
