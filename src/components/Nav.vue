@@ -10,7 +10,7 @@
       </div>
       <div>
         <router-link v-if="!this.getUser.initialized" class="block mt-4 lg:inline-block lg:mt-0 text-sm hover:text-gray-400 mr-4" to="/login">Login</router-link>
-        <router-link v-if="this.getUser.initialized" class="block mt-4 lg:inline-block lg:mt-0 text-sm hover:text-gray-400 mr-4" to="/">{{ this.getUser.name }}</router-link>
+        <button v-if="this.getUser.initialized" @click="logout" class="block mt-4 lg:inline-block lg:mt-0 text-sm hover:text-gray-400 mr-4">{{ this.getUser.name }}</button>
       </div>
     </div>
   </nav>
@@ -26,14 +26,15 @@ export default {
   name: 'Nav',
   components: { rss: RssIcon },
   methods: {
-    ...mapActions(['getUserAsync'])
+    ...mapActions(['getUserAsync']),
+    logout: function () {
+      this.$auth.logout({
+        returnTo: window.location.origin
+      })
+    }
   },
   computed: {
     ...mapGetters(['getUser'])
-  },
-  mounted () {
-    console.log('test')
-    console.log(process.env)
   }
 }
 </script>
