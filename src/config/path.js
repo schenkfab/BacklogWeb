@@ -1,23 +1,25 @@
+const API_HOST = process.env.VUE_APP_API_HOST
+
 module.exports = {
   POST_FEED () {
-    return 'https://localhost:44312/api/feeds'
+    return `${API_HOST}/api/feeds`
   },
   GET_FEED () {
-    return 'https://localhost:44312/api/feeds'
+    return `${API_HOST}/api/feeds`
   },
   POST_Subscription () {
-    return 'https://localhost:44312/api/subscriptions'
+    return `${API_HOST}/api/subscriptions`
   },
   DELETE_Subscription (id) {
-    return `https://localhost:44312/api/subscriptions/${id}`
+    return `${API_HOST}/api/subscriptions/${id}`
   },
   GET_User () {
-    return 'https://localhost:44312/api/users'
+    return `${API_HOST}/api/users`
   },
   POST_NON_DUB_USER () {
-    return 'https://localhost:44312/api/users'
+    return `${API_HOST}/api/users`
   },
   PATCH_ITEM (itemId, statusId) {
-    return `https://localhost:44312/api/users/${itemId}/${statusId}`
+    return `${API_HOST}/api/users/${itemId}/${statusId}`
   }
 }
