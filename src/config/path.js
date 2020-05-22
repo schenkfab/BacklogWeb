@@ -10,6 +10,9 @@ module.exports = {
   POST_Subscription () {
     return `${API_HOST}/api/subscriptions`
   },
+  POST_AddItems () {
+    return `${API_HOST}/api/subscriptions/additems`
+  },
   DELETE_Subscription (id) {
     return `${API_HOST}/api/subscriptions/${id}`
   },

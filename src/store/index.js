@@ -178,6 +178,7 @@ export default new Vuex.Store({
 
       try {
         await axios.post(_URLs.POST_Subscription(), sub, options)
+        await axios.post(_URLs.POST_AddItems(), {}, options)
       } catch (err) {
         console.log(err)
       }
