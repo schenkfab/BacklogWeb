@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import Kanban from '../views/Kanban.vue'
 import Feeds from '../views/Feeds.vue'
 import Login from '../views/Login.vue'
 import { authGuard } from '../auth/authGuard'
@@ -11,7 +12,12 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home,
+    component: Home
+  },
+  {
+    path: '/board',
+    name: 'Kanban',
+    component: Kanban,
     beforeEnter: authGuard
   },
   {

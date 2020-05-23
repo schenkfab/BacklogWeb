@@ -6,6 +6,7 @@
     <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
       <div class="text-sm lg:flex-grow">
         <router-link class="block mt-4 lg:inline-block lg:mt-0 hover:text-gray-400 mr-4" to="/">Home</router-link>
+        <router-link v-if="this.getUser.initialized" class="block mt-4 lg:inline-block lg:mt-0 hover:text-gray-400 mr-4" to="/board">Board</router-link>
         <router-link v-if="this.getUser.initialized" class="block mt-4 lg:inline-block lg:mt-0 hover:text-gray-400 mr-4" to="/feeds">Feeds</router-link>
       </div>
       <div>
