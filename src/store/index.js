@@ -40,6 +40,8 @@ export default new Vuex.Store({
     setToken (state, token) {
       state.token = token
       state.token.initialized = true
+      state.user = token
+      state.user.initialized = true
     },
     setFeeds (state, feeds) {
       state.feeds = feeds
@@ -77,9 +79,12 @@ export default new Vuex.Store({
         console.log(err)
       }
     },
-    getFeedsAsync: async ({ commit }) => {
+    getFeedsAsync: async ({ state, commit }) => {
+      const options = {
+        headers: { Authorization: `Bearer ${state.token.token}` }
+      }
       try {
-        const { data } = await axios.get(_URLs.GET_FEED())
+        const { data } = await axios.get(_URLs.GET_FEED(), options)
         commit('setFeeds', data)
       } catch (err) {
         console.log(err)
@@ -97,61 +102,67 @@ export default new Vuex.Store({
 
       dispatch('getFeedsAsync')
     },
-    getUserAsync: async ({ commit, state }) => {
-      try {
-        const options = {
-          headers: { Authorization: `Bearer ${state.token.token}` }
+    getUserAsync: async ({ commit, state }, force = false) => {
+      var userData = null
+      if (state.user.initialized && !force) {
+        userData = state.user
+      } else {
+        try {
+          const options = {
+            headers: { Authorization: `Bearer ${state.token.token}` }
+          }
+          const { data } = await axios.get(_URLs.GET_User(), options)
+          commit('setUser', data[0])
+          userData = data[0]
+        } catch (err) {
+          commit('setError', 'User object cannot be downloaded. Please try again later.')
         }
-        const { data } = await axios.get(_URLs.GET_User(), options)
-        commit('setUser', data[0])
-
-        // get all subscribed feed Ids:
-        var subscribed = []
-        data[0].subscriptions.forEach(o => {
-          subscribed.push(o.feed.id)
-        })
-
-        const backlog = []
-        const toDo = []
-        const inProgress = []
-        const done = []
-        const rejected = []
-
-        data[0].boardItems.forEach(o => {
-          if (o.status === 0) {
-            backlog.push(o)
-          } else if (o.status === 1) {
-            toDo.push(o)
-          } else if (o.status === 2) {
-            inProgress.push(o)
-          } else if (o.status === 3) {
-            done.push(o)
-          } else if (o.status === 4) {
-            rejected.push(o)
-          }
-        })
-
-        const compare = function (a, b) {
-          if (a.article.date < b.article.date) {
-            return 1
-          }
-          if (a.article.date > b.article.date) {
-            return -1
-          }
-          return 0
-        }
-        const backlogOrdered = backlog.sort(compare)
-
-        commit('setBacklog', backlogOrdered)
-        commit('setToDo', toDo)
-        commit('setInProgress', inProgress)
-        commit('setDone', done)
-        commit('setRejected', rejected)
-
-        commit('setSubscribed', subscribed)
-      } catch (err) {
-        commit('setError', 'User object cannot be downloaded. Please try again later.')
       }
+
+      // get all subscribed feed Ids:
+      var subscribed = []
+      userData.subscriptions.forEach(o => {
+        subscribed.push(o.feed.id)
+      })
+
+      const backlog = []
+      const toDo = []
+      const inProgress = []
+      const done = []
+      const rejected = []
+
+      userData.boardItems.forEach(o => {
+        if (o.status === 0) {
+          backlog.push(o)
+        } else if (o.status === 1) {
+          toDo.push(o)
+        } else if (o.status === 2) {
+          inProgress.push(o)
+        } else if (o.status === 3) {
+          done.push(o)
+        } else if (o.status === 4) {
+          rejected.push(o)
+        }
+      })
+
+      const compare = function (a, b) {
+        if (a.article.date < b.article.date) {
+          return 1
+        }
+        if (a.article.date > b.article.date) {
+          return -1
+        }
+        return 0
+      }
+      const backlogOrdered = backlog.sort(compare)
+
+      commit('setBacklog', backlogOrdered)
+      commit('setToDo', toDo)
+      commit('setInProgress', inProgress)
+      commit('setDone', done)
+      commit('setRejected', rejected)
+
+      commit('setSubscribed', subscribed)
     },
     deleteSubscriptionAsync: async ({ dispatch, state }, subscriptionId) => {
       const options = {
