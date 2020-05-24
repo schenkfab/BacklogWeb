@@ -1,10 +1,13 @@
 <template>
   <div class="container mx-auto items-center justify-center" v-if="this.getUser.initialized">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl">Feeds</h1>
+      <hr>
+    </div>
     <add-feed></add-feed>
     <div>
       <feeds-table @subscribe="subscribe" @unsubscribe="unsubscribe" :feeds="this.getFeeds" :subscribed="this.getSubscribed"></feeds-table>
     </div>
-
   </div>
 </template>
 
