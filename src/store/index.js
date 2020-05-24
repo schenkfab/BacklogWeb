@@ -69,6 +69,19 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    submitErrorAsync: async ({ commit, state }, url) => {
+      const options = {
+        headers: { Authorization: `Bearer ${state.token.token}` }
+      }
+      try {
+        await axios.post(_URLs.POST_ERROR(), {
+          url: url,
+          userId: state.user.id
+        }, options)
+      } catch (err) {
+        console.log(err)
+      }
+    },
     setStatusAsync: async ({ commit, state }, { itemId, statusId }) => {
       const options = {
         headers: { Authorization: `Bearer ${state.token.token}` }

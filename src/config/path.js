@@ -24,5 +24,8 @@ module.exports = {
   },
   PATCH_ITEM (itemId, statusId) {
     return `${API_HOST}/api/users/${itemId}/${statusId}`
+  },
+  POST_ERROR () {
+    return `${API_HOST}/api/errors`
   }
 }
