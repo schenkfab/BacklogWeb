@@ -27,5 +27,20 @@ module.exports = {
   },
   POST_ERROR () {
     return `${API_HOST}/api/errors`
+  },
+  GET_COLLECTIONS () {
+    return `${API_HOST}/api/collections`
+  },
+  POST_COLLECTION () {
+    return `${API_HOST}/api/collections`
+  },
+  GET_FOLLOWS () {
+    return `${API_HOST}/api/follows`
+  },
+  POST_FOLLOW () {
+    return `${API_HOST}/api/follow`
+  },
+  POST_AddFeedToCollection () {
+    return `${API_HOST}/api/collections/addfeedtocollection`
   }
 }

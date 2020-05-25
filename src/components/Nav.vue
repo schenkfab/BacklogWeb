@@ -17,13 +17,17 @@
         >Board</router-link>
         <router-link
           v-if="this.getUser.initialized"
-          class="block mt-4 lg:inline-block lg:mt-0 hover:text-gray-400 mr-5 ml-2"
+          class="block mt-4 lg:inline-block lg:mt-0 hover:text-gray-400 mr-2 ml-2"
           to="/feeds"
-        >Feeds</router-link>
+        >Feeds</router-link><router-link
+          v-if="this.getUser.initialized"
+          class="block mt-4 lg:inline-block lg:mt-0 hover:text-gray-400 mr-5 ml-2"
+          to="/collections"
+        >Collections</router-link>
         <span v-if="this.getUser.initialized">|</span>
         <router-link
           v-if="this.getUser.initialized"
-          class="block mt-4 lg:inline-block lg:mt-0 text-green-400 hover:text-gray-400 mr-2 ml-5"
+          class="block mt-4 lg:inline-block lg:mt-0 text-purple-600 hover:text-purple-400 mr-2 ml-5"
           to="/feeds"
         >Development</router-link>
       </div>

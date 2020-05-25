@@ -21,7 +21,6 @@ export const useAuth0 = ({
         loading: true,
         isAuthenticated: false,
         user: {},
-        // token: null,
         auth0Client: null,
         popupOpen: false,
         error: null,
@@ -90,6 +89,8 @@ export const useAuth0 = ({
         client_id: options.clientId,
         audience: options.audience,
         redirect_uri: redirectUri
+        // responseType: 'token id_token',
+        // scope: 'openid profile create:objectives'
       })
 
       try {
