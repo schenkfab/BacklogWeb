@@ -6,7 +6,7 @@
     </div>
     <add-feed></add-feed>
     <div>
-      <feeds-table @subscribe="subscribe" @unsubscribe="unsubscribe" :feeds="this.getFeeds" :subscribed="this.getSubscribed"></feeds-table>
+      <feeds-table :mycollections="getMyCollections" @subscribe="subscribe" @unsubscribe="unsubscribe" :feeds="this.getFeeds" :subscribed="this.getSubscribed"></feeds-table>
     </div>
   </div>
 </template>
@@ -24,11 +24,11 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters(['getFeeds', 'getSubscribed', 'getUser'])
+    ...mapGetters(['getFeeds', 'getSubscribed', 'getUser', 'getMyCollections'])
   },
   methods: {
     ...mapMutations(['setLoading']),
-    ...mapActions(['getFeedsAsync', 'addSubscriptionAsync', 'deleteSubscriptionAsync', 'getUserAsync']),
+    ...mapActions(['getFeedsAsync', 'getCollectionsAsync', 'addSubscriptionAsync', 'deleteSubscriptionAsync', 'getUserAsync']),
     subscribe: async function (id) {
       await this.addSubscriptionAsync(id)
     },
@@ -46,8 +46,8 @@ export default {
   },
   mounted: async function () {
     this.setLoading(true)
-    await this.getUserAsync()
     await this.getFeedsAsync()
+    await this.getCollectionsAsync()
     this.setLoading(false)
   }
 }

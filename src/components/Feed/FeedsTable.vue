@@ -14,12 +14,11 @@
           <td class="border px-4 py-2"><a :href="feed.url" target="_blank">{{ feed.url }}</a></td>
           <td class="border px-4 py-2">{{ new Date(feed.lastCrawl).toLocaleString() }}</td>
           <td class="border px-4 py-2">
-            <button v-if="!alreadySubscribed(feed.id)" class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" @click="subscribe(feed.id)">
-              Subscribe
-            </button>
-            <button v-if="alreadySubscribed(feed.id)" class="bg-white hover:bg-gray-100 text-red-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" @click="unsubscribe(feed.id)">
-              Unsubscribe
-            </button>
+            <span class="text-xs">Add to Collection:</span>
+            <select v-model="feed.selected" class="ml-2 text-xs border border-purple-400 ">
+              <option v-for="col in getCollectionsForFeed(feed)" v-bind:key="col.id" v-bind:value="col.id">{{ col.name }}</option>
+            </select>
+            <button class="ml-2 text-xs bg-white hover:bg-purple-100 text-purple-800 py-1 px-1">Add</button>
           </td>
         </tr>
       </tbody>
@@ -27,9 +26,15 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   props: {
     feeds: {
+      type: Array,
+      default: () => ([])
+    },
+    mycollections: {
       type: Array,
       default: () => ([])
     },
@@ -38,7 +43,30 @@ export default {
       default: () => ([])
     }
   },
+  computed: {
+    ...mapGetters(['getUser'])
+  },
   methods: {
+    getCollectionsForFeed: function (feed) {
+      var x = []
+
+      this.mycollections.forEach(all => {
+        var alreadyAdded = false
+        feed.feedInCollections.forEach(current => {
+          if (current.Id === all.Id) {
+            alreadyAdded = true
+          }
+        })
+        if (!alreadyAdded) {
+          if (all.name === this.getUser.sub) {
+            all.name = 'My Collection'
+          }
+          x.push(all)
+        }
+      })
+
+      return x
+    },
     subscribe: function (id) {
       this.$emit('subscribe', id)
     },

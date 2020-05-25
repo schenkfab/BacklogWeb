@@ -16,6 +16,7 @@ export default new Vuex.Store({
     user: {
     },
     collections: [],
+    mycollections: [],
     follows: []
   },
   getters: {
@@ -28,6 +29,7 @@ export default new Vuex.Store({
     getSubscribed: state => state.subscribed,
     getError: state => state.error,
     getCollections: state => state.collections,
+    getMyCollections: state => state.mycollections,
     getFollows: state => state.follows
   },
   mutations: {
@@ -36,6 +38,9 @@ export default new Vuex.Store({
     },
     setCollections (state, collections) {
       state.collections = collections
+    },
+    setMyCollections (state, collections) {
+      state.mycollections = collections
     },
     setLoading (state, loading) {
       state.loading = loading
@@ -169,8 +174,14 @@ export default new Vuex.Store({
       }
       try {
         const { data } = await axios.get(_URLs.GET_COLLECTIONS(), options)
-        console.log(data)
+        var mycollections = []
+        data.forEach(x => {
+          if (x.UserId === state.user.Id) {
+            mycollections.push(x)
+          }
+        })
         commit('setCollections', data)
+        commit('setMyCollections', mycollections)
       } catch (err) {
         console.log(err)
       }
