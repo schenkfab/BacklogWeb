@@ -12,13 +12,13 @@
       <h1 class="text-xl text-purple-400">My Collections</h1>
     </div>
     <div class="mb-8">
-      <collections-table @follow="follow" :collections="this.getCollections" :followed="this.getFollowed"></collections-table>
+      <collections-table @follow="follow" @unfollow="unfollow" :collections="this.getCollections" :followed="this.getFollowed()"></collections-table>
     </div>
     <div class="text-left mb-8">
       <h1 class="text-xl text-purple-400">All Collections</h1>
     </div>
     <div>
-      <collections-table @subscribe="subscribe" :collections="this.getCollections" :followed="this.getFollowed"></collections-table>
+      <collections-table @follow="follow" @unfollow="unfollow" :collections="this.getCollections" :followed="this.getFollowed()"></collections-table>
     </div>
 
   </div>
@@ -37,10 +37,23 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters(['getCollections', 'getUser', 'getPersonalCollection'])
+    ...mapGetters(['getCollections', 'getUser', 'getPersonalCollection', 'getFollows'])
   },
   methods: {
-    ...mapActions(['getCollectionsAsync', 'addCollectionAsync', 'getUserAsync', 'getFollowsAsync'])
+    ...mapActions(['getCollectionsAsync', 'addCollectionAsync', 'getUserAsync', 'getFollowsAsync']),
+    getFollowed () {
+      const followed = []
+      this.getFollows.forEach(x => {
+        followed.push(x.collection.id)
+      })
+      return followed
+    },
+    follow (collectionId) {
+      console.error('follow needs to be implemented', collectionId)
+    },
+    unfollow (collectionId) {
+      console.error('unfollow needs to be implemented', collectionId)
+    }
   },
   mounted: async function () {
     await this.getCollectionsAsync()
