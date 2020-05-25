@@ -248,51 +248,6 @@ export default new Vuex.Store({
           commit('setError', 'User object cannot be downloaded. Please try again later.')
         }
       }
-
-      // // get all subscribed feed Ids:
-      // var subscribed = []
-      // userData.subscriptions.forEach(o => {
-      //   subscribed.push(o.feed.id)
-      // })
-
-      // const backlog = []
-      // const toDo = []
-      // const inProgress = []
-      // const done = []
-      // const rejected = []
-
-      // userData.boardItems.forEach(o => {
-      //   if (o.status === 0) {
-      //     backlog.push(o)
-      //   } else if (o.status === 1) {
-      //     toDo.push(o)
-      //   } else if (o.status === 2) {
-      //     inProgress.push(o)
-      //   } else if (o.status === 3) {
-      //     done.push(o)
-      //   } else if (o.status === 4) {
-      //     rejected.push(o)
-      //   }
-      // })
-
-      // const compare = function (a, b) {
-      //   if (a.article.date < b.article.date) {
-      //     return 1
-      //   }
-      //   if (a.article.date > b.article.date) {
-      //     return -1
-      //   }
-      //   return 0
-      // }
-      // const backlogOrdered = backlog.sort(compare)
-
-      // commit('setBacklog', backlogOrdered)
-      // commit('setToDo', toDo)
-      // commit('setInProgress', inProgress)
-      // commit('setDone', done)
-      // commit('setRejected', rejected)
-
-      // commit('setSubscribed', subscribed)
     },
     deleteSubscriptionAsync: async ({ dispatch, state }, subscriptionId) => {
       const options = {
@@ -306,6 +261,12 @@ export default new Vuex.Store({
       }
 
       dispatch('getUserAsync')
+    },
+    addFeedToCollectionAsync: async ({ dispatch, state }, obj) => {
+      const options = {
+        headers: { Authorization: `Bearer ${state.token.token}` }
+      }
+      await axios.post(_URLs.POST_AddFeedToCollection(), obj, options)
     },
     followCollectionAsync: async ({ dispatch, state }, { feedId, collectionId }) => {
       const options = {

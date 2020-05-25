@@ -18,7 +18,7 @@
             <select v-model="feed.selected" class="ml-2 text-xs border border-purple-400 ">
               <option v-for="col in getCollectionsForFeed(feed)" v-bind:key="col.id" v-bind:value="col.id">{{ col.name }}</option>
             </select>
-            <button class="ml-2 text-xs bg-white hover:bg-purple-100 text-purple-800 py-1 px-1">Add</button>
+            <button class="ml-2 text-xs bg-white hover:bg-purple-100 text-purple-800 py-1 px-1" @click="addFeedToCollection(feed)">Add</button>
           </td>
         </tr>
       </tbody>
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   props: {
@@ -47,13 +47,14 @@ export default {
     ...mapGetters(['getUser'])
   },
   methods: {
+    ...mapActions(['addFeedToCollectionAsync']),
     getCollectionsForFeed: function (feed) {
       var x = []
 
       this.mycollections.forEach(all => {
         var alreadyAdded = false
         feed.feedInCollections.forEach(current => {
-          if (current.Id === all.Id) {
+          if (current.collectionId === all.id) {
             alreadyAdded = true
           }
         })
@@ -67,15 +68,24 @@ export default {
 
       return x
     },
-    subscribe: function (id) {
-      this.$emit('subscribe', id)
-    },
-    unsubscribe: function (feedId) {
-      this.$emit('unsubscribe', feedId)
-    },
-    alreadySubscribed: function (id) {
-      return this.subscribed.includes(id)
+    addFeedToCollection: function (feed) {
+      const obj = {
+        feedId: feed.id,
+        collectionId: feed.selected
+      }
+      if (feed.selected) {
+        this.addFeedToCollectionAsync(obj)
+      }
     }
+    // subscribe: function (id) {
+    //   this.$emit('subscribe', id)
+    // },
+    // unsubscribe: function (feedId) {
+    //   this.$emit('unsubscribe', feedId)
+    // },
+    // alreadySubscribed: function (id) {
+    //   return this.subscribed.includes(id)
+    // }
   }
 }
 </script>
