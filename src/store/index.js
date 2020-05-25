@@ -31,6 +31,7 @@ export default new Vuex.Store({
     getCollections: state => state.collections,
     getMyCollections: state => state.mycollections,
     getFollows: state => state.follows
+
   },
   mutations: {
     setFollows (state, follows) {
@@ -261,6 +262,14 @@ export default new Vuex.Store({
       }
 
       dispatch('getUserAsync')
+    },
+    getBacklog: ({ state }, collectionId) => {
+      state.follows.forEach(x => {
+        console.log(x.collection.id === collectionId)
+        if (x.collection.id === collectionId) {
+          return x.backlog
+        }
+      })
     },
     addFeedToCollectionAsync: async ({ dispatch, state }, obj) => {
       const options = {

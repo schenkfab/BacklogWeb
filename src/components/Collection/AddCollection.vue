@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   data: () => {
@@ -56,7 +56,6 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setLoading']),
     ...mapActions(['addCollectionAsync']),
     async addCollection () {
       await this.addCollectionAsync({ name: this.name, description: this.description, isPrivate: this.isPrivate })

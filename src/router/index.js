@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Kanban from '../views/Kanban.vue'
+import Boards from '../views/Boards.vue'
 import Feeds from '../views/Feeds.vue'
 import Login from '../views/Login.vue'
 import Collections from '../views/Collections.vue'
@@ -18,7 +18,7 @@ const routes = [
   {
     path: '/board',
     name: 'Kanban',
-    component: Kanban,
+    component: Boards,
     beforeEnter: authGuard
   },
   {

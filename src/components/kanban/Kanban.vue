@@ -17,6 +17,12 @@ import Column from '@/components/kanban/Column'
 import { mapActions, mapMutations, mapGetters } from 'vuex'
 
 export default {
+  props: {
+    follow: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   name: 'Kanban',
   components: {
     Column
@@ -56,58 +62,40 @@ export default {
 
       this.setStatusAsync({ itemId: el.id, statusId: el.status })
     },
-    ...mapActions(['getUserAsync', 'setStatusAsync']),
+    ...mapActions(['getUserAsync', 'setStatusAsync', 'getBacklog', 'getFollowsAsync']),
     ...mapMutations(['setToDo', 'setLoading'])
   },
   computed: {
     ...mapGetters(['getUser']),
     backlog: {
       get () {
-        return this.$store.state.backlog
-      },
-      set (val) {
-        this.$store.commit('setBacklog', val)
+        return this.follow.backlog
       }
     },
     toDo: {
       get () {
-        return this.$store.state.toDo
-      },
-      set (val) {
-        console.log(val)
-        this.setToDo(val)
+        return this.follow.toDo
       }
     },
     inProgress: {
       get () {
-        return this.$store.state.inProgress
-      },
-      set (val) {
-        this.$store.commit('setInProgress', val)
+        return this.follow.inProgress
       }
     },
     done: {
       get () {
-        return this.$store.state.done
-      },
-      set (val) {
-        this.$store.commit('setDone', val)
+        return this.follow.done
       }
     },
     rejected: {
       get () {
-        return this.$store.state.rejected
-      },
-      set (val) {
-        this.$store.commit('setRejected', val)
+        return this.follow.rejected
       }
     }
 
   },
   mounted: async function () {
-    this.setLoading(true)
-    await this.getUserAsync()
-    this.setLoading(false)
+    this.getFollowsAsync()
   }
 }
 </script>
