@@ -7,9 +7,10 @@
 </template>
 <script>
 import Kanban from '@/components/kanban/Kanban'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 
 export default {
+  props: ['followId'],
   name: 'Boards',
   components: {
     Kanban
@@ -23,6 +24,8 @@ export default {
     ...mapGetters(['getFollows', 'getUser'])
   },
   methods: {
+    ...mapMutations(['setLoading']),
+    ...mapActions(['getFollowsAsync', 'getCollectionsAsync']),
     getName (name) {
       if (name === this.getUser.sub) {
         return 'My Collection'
@@ -31,9 +34,17 @@ export default {
       }
     },
     setFollow (follow) {
-      console.log(follow)
       this.selected = follow
     }
+  },
+  async mounted () {
+    this.setLoading(true)
+    await this.getCollectionsAsync()
+    await this.getFollowsAsync()
+    if (this.followId) {
+      this.setFollow(this.getFollows.filter(o => o.id === parseInt(this.followId))[0])
+    }
+    this.setLoading(false)
   }
 }
 </script>

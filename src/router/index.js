@@ -16,8 +16,9 @@ const routes = [
     component: Home
   },
   {
-    path: '/board',
+    path: '/board/:followId?',
     name: 'Kanban',
+    props: true,
     component: Boards,
     beforeEnter: authGuard
   },

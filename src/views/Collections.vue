@@ -30,7 +30,7 @@
 <script>
 import AddCollection from '@/components/Collection/AddCollection'
 import CollectionsTable from '@/components/Collection/CollectionsTable'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 
 export default {
   components: {
@@ -43,6 +43,7 @@ export default {
     ...mapGetters(['getCollections', 'getUser', 'getPersonalCollection', 'getFollows'])
   },
   methods: {
+    ...mapMutations(['setLoading']),
     ...mapActions(['getCollectionsAsync', 'addCollectionAsync', 'getUserAsync', 'getFollowsAsync', 'addFollowsAsync']),
     getFollowed () {
       const followed = []
@@ -59,9 +60,10 @@ export default {
     }
   },
   mounted: async function () {
+    this.setLoading(true)
     await this.getCollectionsAsync()
     await this.getFollowsAsync()
-    console.log(this.getPersonalCollection)
+    this.setLoading(false)
   }
 }
 </script>
