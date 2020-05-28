@@ -43,7 +43,7 @@ export default {
     ...mapGetters(['getCollections', 'getUser', 'getPersonalCollection', 'getFollows'])
   },
   methods: {
-    ...mapActions(['getCollectionsAsync', 'addCollectionAsync', 'getUserAsync', 'getFollowsAsync']),
+    ...mapActions(['getCollectionsAsync', 'addCollectionAsync', 'getUserAsync', 'getFollowsAsync', 'addFollowsAsync']),
     getFollowed () {
       const followed = []
       this.getFollows.forEach(x => {
@@ -52,7 +52,7 @@ export default {
       return followed
     },
     follow (collectionId) {
-      console.error('follow needs to be implemented', collectionId)
+      this.addFollowsAsync(collectionId)
     },
     unfollow (collectionId) {
       console.error('unfollow needs to be implemented', collectionId)

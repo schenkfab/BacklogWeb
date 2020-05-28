@@ -38,7 +38,7 @@ module.exports = {
     return `${API_HOST}/api/follows`
   },
   POST_FOLLOW () {
-    return `${API_HOST}/api/follow`
+    return `${API_HOST}/api/follows`
   },
   POST_AddFeedToCollection () {
     return `${API_HOST}/api/collections/addfeedtocollection`
