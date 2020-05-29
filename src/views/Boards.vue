@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button class="text-purple-700 mr-4" v-for="follow in this.getFollows" v-bind:key="follow.id" @click="setFollow2(follow.id)">{{ getName(follow.collection.name) }}</button>
+    <button class="text-purple-700 mr-4" v-for="follow in this.getFollows" v-bind:key="follow.id" @click="setFollow(follow.id)">{{ getName(follow.collection.name) }}</button>
     <hr>
     <kanban :follow="this.selected" v-if="this.selected.backlog"></kanban>
   </div>
@@ -33,11 +33,11 @@ export default {
         return name
       }
     },
-    setFollow (follow) {
+    setSelected (follow) {
       this.selected = follow
     },
-    setFollow2 (id) {
-      this.setFollow(this.getFollows.filter(o => o.id === id)[0])
+    setFollow (id) {
+      this.setSelected(this.getFollows.filter(o => o.id === id)[0])
       this.$router.push('/board/' + id).catch(err => { console.log(err) })
     }
   },
@@ -46,7 +46,7 @@ export default {
     await this.getCollectionsAsync()
     await this.getFollowsAsync()
     if (this.followId) {
-      this.setFollow(this.getFollows.filter(o => o.id === parseInt(this.followId))[0])
+      this.setSelected(this.getFollows.filter(o => o.id === parseInt(this.followId))[0])
     }
     this.setLoading(false)
   }
