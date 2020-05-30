@@ -75,6 +75,7 @@ export default {
       }
       if (feed.selected) {
         this.addFeedToCollectionAsync(obj)
+        feed.selected = null
       }
     }
     // subscribe: function (id) {

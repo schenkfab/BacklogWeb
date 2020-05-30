@@ -276,6 +276,7 @@ export default new Vuex.Store({
         headers: { Authorization: `Bearer ${state.token.token}` }
       }
       await axios.post(_URLs.POST_AddFeedToCollection(), obj, options)
+      dispatch('getFeedsAsync')
     },
     followCollectionAsync: async ({ dispatch, state }, { feedId, collectionId }) => {
       const options = {
