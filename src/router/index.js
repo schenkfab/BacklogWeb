@@ -5,6 +5,7 @@ import Boards from '../views/Boards.vue'
 import Feeds from '../views/Feeds.vue'
 import Login from '../views/Login.vue'
 import Collections from '../views/Collections.vue'
+import Collection from '../views/Collection.vue'
 import { authGuard } from '../auth/authGuard'
 
 Vue.use(VueRouter)
@@ -38,6 +39,13 @@ const routes = [
     path: '/collections',
     name: 'Collections',
     component: Collections,
+    beforeEnter: authGuard
+  },
+  {
+    path: '/collection/:id',
+    name: 'Collection',
+    props: true,
+    component: Collection,
     beforeEnter: authGuard
   },
   {

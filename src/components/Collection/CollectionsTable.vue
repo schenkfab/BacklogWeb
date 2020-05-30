@@ -10,7 +10,7 @@
       </thead>
       <tbody>
         <tr v-for="collection in this.collections" :key="collection.id">
-          <td class="border px-4 py-2">{{ getName(collection.name) }}</td>
+          <td class="border px-4 py-2"><button class="text-purple-600" @click="goToCollection(collection.id)">{{ getName(collection.name) }}</button></td>
           <td class="border px-4 py-2">{{ collection.description }}</td>
           <td class="border px-4 py-2">{{ getIsPrivate(collection.isPrivate) }}</td>
           <td class="border px-4 py-2">
@@ -44,6 +44,9 @@ export default {
     ...mapGetters(['getUser'])
   },
   methods: {
+    goToCollection (id) {
+      this.$router.push('/collection/' + id).catch(err => { console.log(err) })
+    },
     getName (name) {
       if (name === this.getUser.sub) {
         return 'My Collection'
