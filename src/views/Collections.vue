@@ -15,7 +15,7 @@
       <h1 class="text-xl text-purple-400">My Collections</h1>
     </div>
     <div class="mb-8">
-      <collections-table @follow="follow" @unfollow="unfollow" :collections="this.getCollections" :followed="this.getFollowed()"></collections-table>
+      <collections-table @follow="follow" @unfollow="unfollow" :collections="this.getMyCollections" :followed="this.getFollowed()"></collections-table>
     </div>
     <div class="text-left mb-8">
       <h1 class="text-xl text-purple-400">All Collections</h1>
@@ -40,7 +40,7 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters(['getCollections', 'getUser', 'getPersonalCollection', 'getFollows'])
+    ...mapGetters(['getCollections', 'getUser', 'getPersonalCollection', 'getMyCollections', 'getFollows'])
   },
   methods: {
     ...mapMutations(['setLoading']),

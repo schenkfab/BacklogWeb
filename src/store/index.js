@@ -177,7 +177,7 @@ export default new Vuex.Store({
         const { data } = await axios.get(_URLs.GET_COLLECTIONS(), options)
         var mycollections = []
         data.forEach(x => {
-          if (x.UserId === state.user.Id) {
+          if (x.userId === state.user.id) {
             mycollections.push(x)
           }
         })
