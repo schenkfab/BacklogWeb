@@ -14,11 +14,11 @@
           <td class="border px-4 py-2 text-xs">Nr of Articles: {{ feed.nrOfArticles }}<br>Nr of Articles Last 7 Days: {{ feed.nrOfArticlesLast7Days }}<br></td>
           <td class="border px-4 py-2">{{ new Date(feed.lastCrawl).toLocaleString() }}</td>
           <td class="border px-4 py-2">
-            <span class="text-xs">Add to Collection:</span>
-            <select v-model="feed.selected" class="ml-2 text-xs border border-purple-400 ">
+            <span class="text-xs" v-if="getCollectionsForFeed(feed).length > 0">Add to Collection:</span>
+            <select v-model="feed.selected" class="ml-2 text-xs border border-purple-400" v-if="getCollectionsForFeed(feed).length > 0">
               <option v-for="col in getCollectionsForFeed(feed)" v-bind:key="col.id" v-bind:value="col.id">{{ col.name }}</option>
             </select>
-            <button class="ml-2 text-xs bg-white hover:bg-purple-100 text-purple-800 py-1 px-1" @click="addFeedToCollection(feed)">Add</button>
+            <button v-if="getCollectionsForFeed(feed).length > 0" class="ml-2 text-xs bg-white hover:bg-purple-100 text-purple-800 py-1 px-1" @click="addFeedToCollection(feed)">Add</button>
           </td>
         </tr>
       </tbody>
