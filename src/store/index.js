@@ -5,19 +5,24 @@ import _URLs from '../config/path'
 
 Vue.use(Vuex)
 
+const MINUTES_BETWEEN_API_CALLS = 5
+
 export default new Vuex.Store({
   state: {
     error: null,
     loading: false,
     feeds: [],
+    feedsLastLoad: null,
     token: {
       token: ''
     },
     user: {
     },
     collections: [],
+    collectionsLastLoad: null,
     mycollections: [],
-    follows: []
+    follows: [],
+    followsLastLoad: null
   },
   getters: {
     getPersonalCollection: (state) => {
@@ -79,60 +84,74 @@ export default new Vuex.Store({
     },
     setError (state, err) {
       state.error = err
+    },
+    setFollowsLastLoad (state, time) {
+      state.followsLastLoad = time
+    },
+    setCollectionsLastLoad (state, time) {
+      state.collectionsLastLoad = time
+    },
+    setFeedsLastLoad (state, time) {
+      state.feedsLastLoad = time
     }
   },
   actions: {
     // Follows
-    getFollowsAsync: async ({ commit, state, dispatch }) => {
-      const options = {
-        headers: { Authorization: `Bearer ${state.token.token}` }
-      }
-      try {
-        const { data } = await axios.get(_URLs.GET_FOLLOWS(), options)
-        console.log(data)
+    getFollowsAsync: async ({ commit, state }, force = false) => {
+      const currentTime = (new Date()).getTime()
 
-        data.forEach(x => {
-          var backlog = []
-          var toDo = []
-          var inProgress = []
-          var done = []
-          var rejected = []
+      if (force || !state.followsLastLoad || currentTime - state.followsLastLoad > (MINUTES_BETWEEN_API_CALLS * 60000)) {
+        const options = {
+          headers: { Authorization: `Bearer ${state.token.token}` }
+        }
+        try {
+          const { data } = await axios.get(_URLs.GET_FOLLOWS(), options)
+          console.log(data)
 
-          x.boardItems.forEach(o => {
-            if (o.status === 0) {
-              backlog.push(o)
-            } else if (o.status === 1) {
-              toDo.push(o)
-            } else if (o.status === 2) {
-              inProgress.push(o)
-            } else if (o.status === 3) {
-              done.push(o)
-            } else if (o.status === 4) {
-              rejected.push(o)
+          data.forEach(x => {
+            var backlog = []
+            var toDo = []
+            var inProgress = []
+            var done = []
+            var rejected = []
+
+            x.boardItems.forEach(o => {
+              if (o.status === 0) {
+                backlog.push(o)
+              } else if (o.status === 1) {
+                toDo.push(o)
+              } else if (o.status === 2) {
+                inProgress.push(o)
+              } else if (o.status === 3) {
+                done.push(o)
+              } else if (o.status === 4) {
+                rejected.push(o)
+              }
+            })
+
+            const compare = function (a, b) {
+              if (a.article.date < b.article.date) {
+                return 1
+              }
+              if (a.article.date > b.article.date) {
+                return -1
+              }
+              return 0
             }
+            const backlogOrdered = backlog.sort(compare)
+
+            x.backlog = backlogOrdered
+            x.toDo = toDo
+            x.inProgress = inProgress
+            x.done = done
+            x.rejected = rejected
           })
 
-          const compare = function (a, b) {
-            if (a.article.date < b.article.date) {
-              return 1
-            }
-            if (a.article.date > b.article.date) {
-              return -1
-            }
-            return 0
-          }
-          const backlogOrdered = backlog.sort(compare)
-
-          x.backlog = backlogOrdered
-          x.toDo = toDo
-          x.inProgress = inProgress
-          x.done = done
-          x.rejected = rejected
-        })
-
-        commit('setFollows', data)
-      } catch (err) {
-        console.log(err)
+          commit('setFollows', data)
+          commit('setFollowsLastLoad', currentTime)
+        } catch (err) {
+          console.log(err)
+        }
       }
     },
     addFollowsAsync: async ({ commit, state, dispatch }, collectionId) => {
@@ -151,7 +170,7 @@ export default new Vuex.Store({
         console.log(err)
       }
 
-      dispatch('getFollowsAsync')
+      dispatch('getFollowsAsync', true)
     },
     // Collections
     addCollectionAsync: async ({ commit, state, dispatch }, collection) => {
@@ -167,24 +186,29 @@ export default new Vuex.Store({
         console.log(err)
       }
 
-      dispatch('getCollectionsAsync')
+      dispatch('getCollectionsAsync', true)
     },
-    getCollectionsAsync: async ({ commit, state }) => {
-      const options = {
-        headers: { Authorization: `Bearer ${state.token.token}` }
-      }
-      try {
-        const { data } = await axios.get(_URLs.GET_COLLECTIONS(), options)
-        var mycollections = []
-        data.forEach(x => {
-          if (x.userId === state.user.id) {
-            mycollections.push(x)
-          }
-        })
-        commit('setCollections', data)
-        commit('setMyCollections', mycollections)
-      } catch (err) {
-        console.log(err)
+    getCollectionsAsync: async ({ commit, state }, force = false) => {
+      const currentTime = (new Date()).getTime()
+
+      if (force || !state.collectionsLastLoad || currentTime - state.collectionsLastLoad > (MINUTES_BETWEEN_API_CALLS * 60000)) {
+        const options = {
+          headers: { Authorization: `Bearer ${state.token.token}` }
+        }
+        try {
+          const { data } = await axios.get(_URLs.GET_COLLECTIONS(), options)
+          var mycollections = []
+          data.forEach(x => {
+            if (x.userId === state.user.id) {
+              mycollections.push(x)
+            }
+          })
+          commit('setCollections', data)
+          commit('setMyCollections', mycollections)
+          commit('setCollectionsLastLoad', currentTime)
+        } catch (err) {
+          console.log(err)
+        }
       }
     },
     submitErrorAsync: async ({ commit, state }, url) => {
@@ -210,15 +234,20 @@ export default new Vuex.Store({
         console.log(err)
       }
     },
-    getFeedsAsync: async ({ state, commit }) => {
-      const options = {
-        headers: { Authorization: `Bearer ${state.token.token}` }
-      }
-      try {
-        const { data } = await axios.get(_URLs.GET_FEED(), options)
-        commit('setFeeds', data)
-      } catch (err) {
-        console.log(err)
+    getFeedsAsync: async ({ state, commit }, force = false) => {
+      const currentTime = (new Date()).getTime()
+
+      if (force || !state.feedsLastLoad || currentTime - state.feedsLastLoad > (MINUTES_BETWEEN_API_CALLS * 60000)) {
+        const options = {
+          headers: { Authorization: `Bearer ${state.token.token}` }
+        }
+        try {
+          const { data } = await axios.get(_URLs.GET_FEED(), options)
+          commit('setFeedsLastLoad', currentTime)
+          commit('setFeeds', data)
+        } catch (err) {
+          console.log(err)
+        }
       }
     },
     addFeedAsync: async ({ dispatch, state }, feed) => {
@@ -231,7 +260,7 @@ export default new Vuex.Store({
         console.log(err)
       }
 
-      dispatch('getFeedsAsync')
+      dispatch('getFeedsAsync', true)
     },
     getUserAsync: async ({ commit, state }, force = false) => {
       // var userData = null
@@ -276,7 +305,7 @@ export default new Vuex.Store({
         headers: { Authorization: `Bearer ${state.token.token}` }
       }
       await axios.post(_URLs.POST_AddFeedToCollection(), obj, options)
-      dispatch('getFeedsAsync')
+      dispatch('getFeedsAsync', true)
     },
     followCollectionAsync: async ({ dispatch, state }, { feedId, collectionId }) => {
       const options = {
@@ -300,7 +329,7 @@ export default new Vuex.Store({
         console.log(err)
       }
 
-      dispatch('getCollectionsAsync')
+      dispatch('getCollectionsAsync', true)
     }
   }
 })
