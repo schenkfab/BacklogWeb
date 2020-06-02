@@ -25,6 +25,14 @@ export default new Vuex.Store({
     followsLastLoad: null
   },
   getters: {
+    getCollectionName: (state) => (id) => {
+      const collection = state.collections.filter(o => o.id === parseInt(id))[0]
+      if (collection.name === state.user.sub) {
+        return 'My Collection'
+      } else {
+        return this.collection.name
+      }
+    },
     getPersonalCollection: (state) => {
       return state.collections.filter(o => o.name === state.user.sub)[0]
     },
@@ -305,6 +313,14 @@ export default new Vuex.Store({
         headers: { Authorization: `Bearer ${state.token.token}` }
       }
       await axios.post(_URLs.POST_AddFeedToCollection(), obj, options)
+      dispatch('getFeedsAsync', true)
+    },
+    removeFeedFromCollectionAsync: async ({ dispatch, state }, { feedId, collectionId }) => {
+      const options = {
+        headers: { Authorization: `Bearer ${state.token.token}` }
+      }
+      console.log(_URLs.DELETE_RemoveFeedFromCollection(feedId, collectionId))
+      await axios.delete(_URLs.DELETE_RemoveFeedFromCollection(feedId, collectionId), options)
       dispatch('getFeedsAsync', true)
     },
     followCollectionAsync: async ({ dispatch, state }, { feedId, collectionId }) => {

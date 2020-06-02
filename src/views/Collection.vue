@@ -32,37 +32,42 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getMyCollections', 'getFeeds', 'getUser'])
+    ...mapGetters(['getMyCollections', 'getFeeds', 'getUser', 'getCollectionName'])
   },
   methods: {
     ...mapMutations(['setLoading']),
-    ...mapActions(['getCollectionsAsync', 'deleteFeedFromCollectionAsync', 'getFeedsAsync']),
+    ...mapActions(['getCollectionsAsync', 'removeFeedFromCollectionAsync', 'getFeedsAsync']),
     unsubscribe (feedId) {
-
+      this.removeFeedFromCollectionAsync({ feedId: feedId, collectionId: this.id })
+    },
+    createFeeds () {
+      const feeds = []
+      this.getFeeds.forEach(o => {
+        o.feedInCollections.forEach(y => {
+          if (y.collectionId === parseInt(this.id)) {
+            feeds.push(o)
+          }
+        })
+      })
+      this.feeds = feeds
+    }
+  },
+  watch: {
+    getFeeds: {
+      deep: true,
+      handler () {
+        this.createFeeds()
+      }
     }
   },
   mounted: async function () {
     this.setLoading(true)
     await this.getCollectionsAsync()
     await this.getFeedsAsync()
-    this.collection = this.getMyCollections.filter(o => o.id === parseInt(this.id))[0]
-    if (this.collection.name === this.getUser.sub) {
-      this.title = 'My Collection'
-    } else {
-      this.title = this.collection.name
-    }
 
-    // Get all feeds that are part of this collection:
-    const feeds = []
-    this.getFeeds.forEach(o => {
-      o.feedInCollections.forEach(y => {
-        if (y.collectionId === parseInt(this.id)) {
-          feeds.push(o)
-        }
-      })
-    })
+    this.title = this.getCollectionName(this.id)
 
-    this.feeds = feeds
+    this.createFeeds()
 
     this.setLoading(false)
   }
