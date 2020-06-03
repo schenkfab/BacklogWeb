@@ -37,8 +37,10 @@ export default {
   methods: {
     ...mapMutations(['setLoading']),
     ...mapActions(['getCollectionsAsync', 'removeFeedFromCollectionAsync', 'getFeedsAsync']),
-    unsubscribe (feedId) {
-      this.removeFeedFromCollectionAsync({ feedId: feedId, collectionId: this.id })
+    async unsubscribe (feedId) {
+      this.setLoading(true)
+      await this.removeFeedFromCollectionAsync({ feedId: feedId, collectionId: this.id })
+      this.setLoading(false)
     },
     createFeeds () {
       const feeds = []
