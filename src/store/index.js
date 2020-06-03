@@ -30,7 +30,7 @@ export default new Vuex.Store({
       if (collection.name === state.user.sub) {
         return 'My Collection'
       } else {
-        return this.collection.name
+        return collection.name
       }
     },
     getPersonalCollection: (state) => {
@@ -314,6 +314,8 @@ export default new Vuex.Store({
       }
       await axios.post(_URLs.POST_AddFeedToCollection(), obj, options)
       dispatch('getFeedsAsync', true)
+      dispatch('getCollectionsAsync', true)
+      dispatch('getFollowsAsync', true)
     },
     removeFeedFromCollectionAsync: async ({ dispatch, state }, { feedId, collectionId }) => {
       const options = {
@@ -321,7 +323,9 @@ export default new Vuex.Store({
       }
       console.log(_URLs.DELETE_RemoveFeedFromCollection(feedId, collectionId))
       await axios.delete(_URLs.DELETE_RemoveFeedFromCollection(feedId, collectionId), options)
-      dispatch('getFeedsAsync', true)
+      await dispatch('getFeedsAsync', true)
+      await dispatch('getCollectionsAsync', true)
+      await dispatch('getFollowsAsync', true)
     },
     followCollectionAsync: async ({ dispatch, state }, { feedId, collectionId }) => {
       const options = {
