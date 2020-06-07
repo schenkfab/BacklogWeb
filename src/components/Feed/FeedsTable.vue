@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 
 export default {
   props: {
@@ -48,6 +48,7 @@ export default {
   },
   methods: {
     ...mapActions(['addFeedToCollectionAsync']),
+    ...mapMutations(['setLoading']),
     getCollectionsForFeed: function (feed) {
       var x = []
 
@@ -68,25 +69,18 @@ export default {
 
       return x
     },
-    addFeedToCollection: function (feed) {
+    addFeedToCollection: async function (feed) {
       const obj = {
         feedId: feed.id,
         collectionId: feed.selected
       }
       if (feed.selected) {
-        this.addFeedToCollectionAsync(obj)
+        this.setLoading(true)
+        await this.addFeedToCollectionAsync(obj)
         feed.selected = null
+        this.setLoading(false)
       }
     }
-    // subscribe: function (id) {
-    //   this.$emit('subscribe', id)
-    // },
-    // unsubscribe: function (feedId) {
-    //   this.$emit('unsubscribe', feedId)
-    // },
-    // alreadySubscribed: function (id) {
-    //   return this.subscribed.includes(id)
-    // }
   }
 }
 </script>
