@@ -194,7 +194,7 @@ export default new Vuex.Store({
         console.log(err)
       }
 
-      dispatch('getCollectionsAsync', true)
+      await dispatch('getCollectionsAsync', true)
     },
     getCollectionsAsync: async ({ commit, state }, force = false) => {
       const currentTime = (new Date()).getTime()
@@ -298,7 +298,7 @@ export default new Vuex.Store({
         console.log(err)
       }
 
-      dispatch('getUserAsync')
+      await dispatch('getUserAsync')
     },
     getBacklog: ({ state }, collectionId) => {
       state.follows.forEach(x => {
@@ -313,9 +313,7 @@ export default new Vuex.Store({
         headers: { Authorization: `Bearer ${state.token.token}` }
       }
       await axios.post(_URLs.POST_AddFeedToCollection(), obj, options)
-      dispatch('getFeedsAsync', true)
-      dispatch('getCollectionsAsync', true)
-      dispatch('getFollowsAsync', true)
+      await Promise.all([dispatch('getFeedsAsync', true), dispatch('getCollectionsAsync', true), dispatch('getFollowsAsync', true)])
     },
     removeFeedFromCollectionAsync: async ({ dispatch, state }, { feedId, collectionId }) => {
       const options = {
@@ -323,9 +321,7 @@ export default new Vuex.Store({
       }
       console.log(_URLs.DELETE_RemoveFeedFromCollection(feedId, collectionId))
       await axios.delete(_URLs.DELETE_RemoveFeedFromCollection(feedId, collectionId), options)
-      await dispatch('getFeedsAsync', true)
-      await dispatch('getCollectionsAsync', true)
-      await dispatch('getFollowsAsync', true)
+      await Promise.all([dispatch('getFeedsAsync', true), dispatch('getCollectionsAsync', true), dispatch('getFollowsAsync', true)])
     },
     followCollectionAsync: async ({ dispatch, state }, { feedId, collectionId }) => {
       const options = {
