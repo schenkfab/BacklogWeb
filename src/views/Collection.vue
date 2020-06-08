@@ -10,7 +10,7 @@
       <h1 class="text-xl text-purple-400">List of Feeds in Collection</h1>
     </div>
     <div>
-      <feeds-table :mycollections="getMyCollections" @unsubscribe="unsubscribe" :feeds="this.feeds"></feeds-table>
+      <feeds-table :ismycollection="isMyCollection" @unsubscribe="unsubscribe" :feeds="this.feeds"></feeds-table>
     </div>
   </div>
 </template>
@@ -32,7 +32,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getMyCollections', 'getFeeds', 'getUser', 'getCollectionName'])
+    ...mapGetters(['getMyCollections', 'getFeeds', 'getUser', 'getCollectionName', 'getCollectionById']),
+    isMyCollection () {
+      if (this.collection) {
+        if (this.collection.userId === this.getUser.id) {
+          return true
+        } else {
+          return false
+        }
+      }
+      return false
+    }
   },
   methods: {
     ...mapMutations(['setLoading']),
@@ -64,13 +74,10 @@ export default {
   },
   mounted: async function () {
     this.setLoading(true)
-    await this.getCollectionsAsync()
-    await this.getFeedsAsync()
-
+    await Promise.all([this.getCollectionsAsync(), this.getFeedsAsync()])
     this.title = this.getCollectionName(this.id)
-
+    this.collection = this.getCollectionById(this.id)
     this.createFeeds()
-
     this.setLoading(false)
   }
 }

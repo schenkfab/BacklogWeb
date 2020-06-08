@@ -5,7 +5,7 @@
           <th class="px-4 py-2">Name</th>
           <th class="px-4 py-2">Statistics</th>
           <th class="px-4 py-2">Last Crawl</th>
-          <th class="px-4 py-2">Action</th>
+          <th class="px-4 py-2" v-if="ismycollection">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -13,7 +13,7 @@
           <td class="border px-4 py-2">{{ feed.name }}<br><a class="text-xs" :href="feed.url" target="_blank">{{ feed.url }}</a></td>
           <td class="border px-4 py-2 text-xs">Nr of Articles: {{ feed.nrOfArticles }}<br>Nr of Articles Last 7 Days: {{ feed.nrOfArticlesLast7Days }}<br></td>
           <td class="border px-4 py-2 text-xs">{{ new Date(feed.lastCrawl).toLocaleString() }}</td>
-          <td class="border px-4 py-2">
+          <td class="border px-4 py-2" v-if="ismycollection">
             <button class="bg-white hover:bg-purple-100 text-purple-800" @click="removeFeedFromCollection(feed)">Remove</button>
           </td>
         </tr>
@@ -29,6 +29,10 @@ export default {
     feeds: {
       type: Array,
       default: () => ([])
+    },
+    ismycollection: {
+      type: Boolean,
+      default: () => (false)
     },
     mycollections: {
       type: Array,

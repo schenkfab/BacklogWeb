@@ -36,6 +36,10 @@ export default new Vuex.Store({
     getPersonalCollection: (state) => {
       return state.collections.filter(o => o.name === state.user.sub)[0]
     },
+    getCollectionById: (state) => (id) => {
+      const collection = state.collections.filter(o => o.id === parseInt(id))[0]
+      return collection
+    },
     getLoading: state => state.loading,
     getFeeds: state => state.feeds,
     getUser: state => state.user,
