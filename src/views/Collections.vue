@@ -61,8 +61,7 @@ export default {
   },
   mounted: async function () {
     this.setLoading(true)
-    await this.getCollectionsAsync()
-    await this.getFollowsAsync()
+    await Promise.all([this.getCollectionsAsync(), this.getFollowsAsync()])
     this.setLoading(false)
   }
 }
