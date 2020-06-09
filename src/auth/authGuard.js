@@ -18,7 +18,7 @@ export const authGuard = (to, from, next) => {
 
         // make sure the user is already registered inside of the app itself with its this.$auth.user.sub
         const token = await authService.getTokenSilently()
-        console.log(authService.user)
+        // console.log(authService.user)
         try {
           const { data } = await axios.post(
             POST_NON_DUB_USER(),

@@ -43,9 +43,7 @@ export default {
     },
     unsubscribe: async function (feedId) {
       var subs = this.getUser.subscriptions
-      console.log(subs)
       subs.forEach(async o => {
-        console.log(o)
         if (o.feed.id === feedId) {
           await this.deleteSubscriptionAsync(o.id)
         }

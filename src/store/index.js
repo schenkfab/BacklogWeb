@@ -118,7 +118,6 @@ export default new Vuex.Store({
         }
         try {
           const { data } = await axios.get(_URLs.GET_FOLLOWS(), options)
-          console.log(data)
 
           data.forEach(x => {
             var backlog = []
@@ -171,7 +170,6 @@ export default new Vuex.Store({
         userId: state.user.id,
         collectionId: collectionId
       }
-      console.log('adding follow', follow)
 
       const options = {
         headers: { Authorization: `Bearer ${state.token.token}` }
@@ -187,7 +185,6 @@ export default new Vuex.Store({
     // Collections
     addCollectionAsync: async ({ commit, state, dispatch }, collection) => {
       collection.userId = state.user.id
-      console.log('adding collection', collection)
 
       const options = {
         headers: { Authorization: `Bearer ${state.token.token}` }
@@ -306,7 +303,6 @@ export default new Vuex.Store({
     },
     getBacklog: ({ state }, collectionId) => {
       state.follows.forEach(x => {
-        console.log(x.collection.id === collectionId)
         if (x.collection.id === collectionId) {
           return x.backlog
         }
@@ -323,7 +319,6 @@ export default new Vuex.Store({
       const options = {
         headers: { Authorization: `Bearer ${state.token.token}` }
       }
-      console.log(_URLs.DELETE_RemoveFeedFromCollection(feedId, collectionId))
       await axios.delete(_URLs.DELETE_RemoveFeedFromCollection(feedId, collectionId), options)
       await Promise.all([dispatch('getFeedsAsync', true), dispatch('getCollectionsAsync', true), dispatch('getFollowsAsync', true)])
     },
