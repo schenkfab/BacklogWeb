@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     ...mapMutations(['setLoading']),
-    ...mapActions(['getCollectionsAsync', 'addCollectionAsync', 'getUserAsync', 'getFollowsAsync', 'addFollowsAsync']),
+    ...mapActions(['getCollectionsAsync', 'addCollectionAsync', 'getUserAsync', 'getFollowsAsync', 'addFollowsAsync', 'unfollowAsync']),
     getFollowed () {
       const followed = []
       this.getFollows.forEach(x => {
@@ -52,11 +52,16 @@ export default {
       })
       return followed
     },
-    follow (collectionId) {
-      this.addFollowsAsync(collectionId)
+    async follow (collectionId) {
+      this.setLoading(true)
+      await this.addFollowsAsync(collectionId)
+      this.setLoading(false)
     },
-    unfollow (collectionId) {
-      console.error('unfollow needs to be implemented', collectionId)
+    async unfollow (collectionId) {
+      this.setLoading(true)
+      var followId = this.getFollows.filter(o => o.collection.id === collectionId)[0].id
+      await this.unfollowAsync(followId)
+      this.setLoading(false)
     }
   },
   mounted: async function () {

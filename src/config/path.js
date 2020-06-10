@@ -40,6 +40,9 @@ module.exports = {
   POST_FOLLOW () {
     return `${API_HOST}/api/follows`
   },
+  DELETE_FOLLOW (id) {
+    return `${API_HOST}/api/follows/${id}`
+  },
   POST_AddFeedToCollection () {
     return `${API_HOST}/api/collections/addfeedtocollection`
   },

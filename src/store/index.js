@@ -180,7 +180,7 @@ export default new Vuex.Store({
         console.log(err)
       }
 
-      dispatch('getFollowsAsync', true)
+      await dispatch('getFollowsAsync', true)
     },
     // Collections
     addCollectionAsync: async ({ commit, state, dispatch }, collection) => {
@@ -321,6 +321,19 @@ export default new Vuex.Store({
       }
       await axios.delete(_URLs.DELETE_RemoveFeedFromCollection(feedId, collectionId), options)
       await Promise.all([dispatch('getFeedsAsync', true), dispatch('getCollectionsAsync', true), dispatch('getFollowsAsync', true)])
+    },
+    unfollowAsync: async ({ dispatch, state }, id) => {
+      const options = {
+        headers: { Authorization: `Bearer ${state.token.token}` }
+      }
+
+      try {
+        await axios.delete(_URLs.DELETE_FOLLOW(id), options)
+      } catch (err) {
+        console.log(err)
+      }
+
+      await Promise.all([dispatch('getCollectionsAsync', true), dispatch('getFollowsAsync', true)])
     },
     followCollectionAsync: async ({ dispatch, state }, { feedId, collectionId }) => {
       const options = {
