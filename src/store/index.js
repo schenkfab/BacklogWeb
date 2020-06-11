@@ -21,6 +21,8 @@ export default new Vuex.Store({
     collections: [],
     collectionsLastLoad: null,
     mycollections: [],
+    collectionStatistics: [],
+    collectionStatisticsLastLoad: null,
     follows: [],
     followsLastLoad: null
   },
@@ -51,6 +53,12 @@ export default new Vuex.Store({
 
   },
   mutations: {
+    setCollectionStatistics (state, stats) {
+      state.collectionStatistics = stats
+    },
+    setCollectionStatisticsLastLoad (state, lastLoad) {
+      state.collectionStatisticsLastLoad = lastLoad
+    },
     setFollows (state, follows) {
       state.follows = follows
     },
@@ -108,6 +116,23 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    getCollectionStatisticsAsync: async ({ commit, state }, force = false) => {
+      const currentTime = (new Date()).getTime()
+
+      if (force || !state.followsLastLoad || currentTime - state.followsLastLoad > (MINUTES_BETWEEN_API_CALLS * 60000)) {
+        const options = {
+          headers: { Authorization: `Bearer ${state.token.token}` }
+        }
+        try {
+          const { data } = await axios.get(_URLs.GET_CollectionStatistics(), options)
+
+          commit('setCollectionStatistics', data)
+          commit('setCollectionStatisticsLastLoad', currentTime)
+        } catch (err) {
+          console.log(err)
+        }
+      }
+    },
     // Follows
     getFollowsAsync: async ({ commit, state }, force = false) => {
       const currentTime = (new Date()).getTime()

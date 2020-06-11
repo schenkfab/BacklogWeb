@@ -46,6 +46,9 @@ module.exports = {
   POST_AddFeedToCollection () {
     return `${API_HOST}/api/collections/addfeedtocollection`
   },
+  GET_CollectionStatistics () {
+    return `${API_HOST}/api/collections/statistics`
+  },
   DELETE_RemoveFeedFromCollection (feedId, collectionId) {
     return `${API_HOST}/api/collections/removefeedfromcollection/${collectionId}/${feedId}`
   }

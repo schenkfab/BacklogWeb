@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     ...mapMutations(['setLoading']),
-    ...mapActions(['getCollectionsAsync', 'addCollectionAsync', 'getUserAsync', 'getFollowsAsync', 'addFollowsAsync', 'unfollowAsync']),
+    ...mapActions(['getCollectionStatisticsAsync', 'getCollectionsAsync', 'addCollectionAsync', 'getUserAsync', 'getFollowsAsync', 'addFollowsAsync', 'unfollowAsync']),
     getFollowed () {
       const followed = []
       this.getFollows.forEach(x => {
@@ -66,7 +66,7 @@ export default {
   },
   mounted: async function () {
     this.setLoading(true)
-    await Promise.all([this.getCollectionsAsync(), this.getFollowsAsync()])
+    await Promise.all([this.getCollectionsAsync(), this.getFollowsAsync(), this.getCollectionStatisticsAsync()])
     this.setLoading(false)
   }
 }
