@@ -4,7 +4,6 @@
     <div>
       <boards-table @subscribe="subscribe" :boards="this.getboards" :subscribed="this.getSubscribed"></boards-table>
     </div>
-
   </div>
 </template>
 
@@ -27,8 +26,7 @@ export default {
     ...mapActions(['getFeedsAsync', 'addSubscriptionAsync', 'getUserAsync'])
   },
   mounted: async function () {
-    await this.getUserAsync()
-    await this.getBoardsAsync()
+    await Promise.all([this.getUserAsync(), this.getBoardsAsync()])
   }
 }
 </script>
