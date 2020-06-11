@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pl-2 pr-2">
     <button class="text-purple-700 mr-4" v-for="follow in this.getFollows" v-bind:key="follow.id" @click="setFollow(follow.id)">{{ getName(follow.collection.name) }}</button>
     <hr>
     <kanban :follow="this.selected" v-if="this.selected.backlog"></kanban>

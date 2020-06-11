@@ -13,7 +13,7 @@
     <div class="se-pre-con" v-if="getLoading">
       <div class="loader">Loading...</div>
     </div>
-    <div class="mx-auto px-4">
+    <div class="mx-auto">
       <router-view/>
     </div>
   </div>
