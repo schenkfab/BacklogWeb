@@ -6,6 +6,7 @@ import Feeds from '../views/Feeds.vue'
 import Login from '../views/Login.vue'
 import Collections from '../views/Collections.vue'
 import AddCollection from '../views/AddCollection.vue'
+import TopCollections from '../views/TopCollections.vue'
 import Collection from '../views/Collection.vue'
 import { authGuard } from '../auth/authGuard'
 
@@ -46,6 +47,12 @@ const routes = [
     path: '/collections/add',
     name: 'Add Collection',
     component: AddCollection,
+    beforeEnter: authGuard
+  },
+  {
+    path: '/collections/top',
+    name: 'Top Collection',
+    component: TopCollections,
     beforeEnter: authGuard
   },
   {

@@ -27,6 +27,9 @@ export default new Vuex.Store({
     followsLastLoad: null
   },
   getters: {
+    getCollectionStatistics: (state) => {
+      return state.collectionStatistics
+    },
     getCollectionName: (state) => (id) => {
       const collection = state.collections.filter(o => o.id === parseInt(id))[0]
       if (collection.name === state.user.sub) {

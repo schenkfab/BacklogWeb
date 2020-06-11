@@ -69,7 +69,10 @@
                       xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                       <path d="M20 10a10 10 0 1 1-20 0 10 10 0 0 1 20 0zm-2 0a8 8 0 1 0-16 0 8 8 0 0 0 16 0zm-8 2H5V8h5V5l5 5-5 5v-3z"/>
                     </svg>
-                    <a href="#" class="text-white bold border-b-2 border-purple-300 hover:text-purple-300">Top Collections</a>
+                    <router-link
+                      class="text-white bold border-b-2 border-purple-300 hover:text-purple-300"
+                      to="/collections/top"
+                    >Top Collections</router-link>
                   </div>
                 </ul>
                 <ul class="px-4 w-full sm:w-1/2 lg:w-1/3 border-gray-600 border-b sm:border-b-0 sm:border-r md:border-b-0 pb-6 pt-6 lg:pt-3">
