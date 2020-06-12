@@ -8,43 +8,29 @@
       As not all feeds are the same, there is a chance, that adding one may fail. If it fails, simply submit the error to us and we will make sure to improve backlog and add the feed ourselves.
     </p>
     <div class="text-left mb-8">
-      <h1 class="text-xl text-purple-400">List of Feeds</h1>
+      <h1 class="text-xl text-purple-400">Add Feed</h1>
     </div>
-    <div>
-      <feeds-table :mycollections="getMyCollections" @subscribe="subscribe" @unsubscribe="unsubscribe" :feeds="this.getFeeds" :subscribed="this.getSubscribed"></feeds-table>
-    </div>
+    <add-feed></add-feed>
   </div>
 </template>
 
 <script>
-import FeedsTable from '@/components/Feed/FeedsTable'
+import AddFeed from '@/components/Feed/AddFeed'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 
 export default {
   components: {
-    FeedsTable
+    AddFeed
   },
   data: () => {
     return {}
   },
   computed: {
-    ...mapGetters(['getFeeds', 'getSubscribed', 'getUser', 'getMyCollections'])
+    ...mapGetters(['getUser'])
   },
   methods: {
     ...mapMutations(['setLoading']),
-    ...mapActions(['getFeedsAsync', 'getCollectionsAsync', 'addSubscriptionAsync', 'deleteSubscriptionAsync', 'getUserAsync']),
-    subscribe: async function (id) {
-      await this.addSubscriptionAsync(id)
-    },
-    unsubscribe: async function (feedId) {
-      var subs = this.getUser.subscriptions
-      subs.forEach(async o => {
-        if (o.feed.id === feedId) {
-          await this.deleteSubscriptionAsync(o.id)
-        }
-      })
-      //
-    }
+    ...mapActions(['getFeedsAsync', 'getCollectionsAsync'])
   },
   mounted: async function () {
     this.setLoading(true)

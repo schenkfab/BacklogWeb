@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Boards from '../views/Boards.vue'
 import Feeds from '../views/Feeds.vue'
+import AddRSSFeed from '../views/AddRSSFeed.vue'
+import AddYouTubeFeed from '../views/AddYouTubeFeed.vue'
 import Login from '../views/Login.vue'
 import Collections from '../views/Collections.vue'
 import AddCollection from '../views/AddCollection.vue'
@@ -35,6 +37,18 @@ const routes = [
     path: '/feeds',
     name: 'Feeds',
     component: Feeds,
+    beforeEnter: authGuard
+  },
+  {
+    path: '/feeds/addrss',
+    name: 'AddRSSFeed',
+    component: AddRSSFeed,
+    beforeEnter: authGuard
+  },
+  {
+    path: '/feeds/addyt',
+    name: 'AddYouTubeFeed',
+    component: AddYouTubeFeed,
     beforeEnter: authGuard
   },
   {
