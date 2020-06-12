@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto items-center justify-center" v-if="this.getUser.initialized">
+  <div class="container mx-auto items-center justify-center mb-8" v-if="this.getUser.initialized">
     <div class="text-left mb-4">
       <h1 class="text-3xl text-purple-600">Feeds</h1>
       <hr>
