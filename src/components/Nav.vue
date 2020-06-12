@@ -110,7 +110,7 @@
           v-if="!this.getUser.initialized"
           class="block mt-4 lg:inline-block lg:mt-0 text-sm mr-4 text-sm font-bold font-sans"
           to="/login"
-        >Login</router-link>
+        >Login or Register</router-link>
         <button
           v-if="this.getUser.initialized"
           @click="logout"
