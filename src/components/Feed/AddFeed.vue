@@ -98,8 +98,10 @@ export default {
     ...mapMutations(['setLoading']),
     ...mapActions(['addFeedAsync', 'submitErrorAsync']),
     async addFeed () {
+      this.setLoading(true)
       await this.addFeedAsync({ name: this.title, url: this.url })
       this.created = true
+      this.setLoading(false)
     },
     async getFeed () {
       this.title = null
