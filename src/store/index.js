@@ -27,6 +27,14 @@ export default new Vuex.Store({
     followsLastLoad: null
   },
   getters: {
+    getAlreadyFollowed: (state) => (collectionId) => {
+      var followed = state.follows.filter(o => o.collection.id === collectionId)
+      if (followed && followed.length > 0) {
+        return true
+      } else {
+        return false
+      }
+    },
     getCollectionStatistics: (state) => {
       return state.collectionStatistics
     },
