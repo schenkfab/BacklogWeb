@@ -1,5 +1,5 @@
 <template>
-  <button class="bg-white hover:bg-purple-300 text-gray-800 py-1 px-3 hover:underline" @click="unfollow()">
+  <button class="bg-white hover:bg-purple-300 font-semibold text-gray-800 py-1 px-3 hover:underline border rounded" @click="unfollow()">
     Unfollow
   </button>
 </template>
