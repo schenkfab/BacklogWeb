@@ -13,9 +13,8 @@
           <td class="border px-4 py-2"><button class="text-purple-600" @click="goToCollection(collection.id)">{{ getCollectionName(collection.id) }}</button></td>
           <td class="border px-4 py-2">{{ collection.description }}</td>
           <td class="border px-4 py-2">{{ getIsPrivate(collection.isPrivate) }}</td>
-          <td class="border py-2">
-            <follow :id="collection.id" v-if="!alreadyFollowed(collection.id) && getCollectionName(collection.id) != 'My Collection'"></follow>
-            <unfollow :id="collection.id" v-if="alreadyFollowed(collection.id) && getCollectionName(collection.id) != 'My Collection'"></unfollow>
+          <td class="border pl-3 py-2">
+            <FollowUnfollowButton :collectionId="collection.id"></FollowUnfollowButton>
           </td>
         </tr>
       </tbody>
@@ -24,17 +23,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import FollowButton from '@/components/Collection/FollowButton'
-import UnfollowButton from '@/components/Collection/UnfollowButton'
+import FollowUnfollowButton from '@/components/Collection/FollowUnfollowButton'
 
 export default {
-  components: { follow: FollowButton, unfollow: UnfollowButton },
+  components: { FollowUnfollowButton },
   props: {
     collections: {
-      type: Array,
-      default: () => ([])
-    },
-    followed: {
       type: Array,
       default: () => ([])
     }
@@ -51,9 +45,6 @@ export default {
     },
     unfollow: function (collectionId) {
       this.$emit('unfollow', collectionId)
-    },
-    alreadyFollowed: function (id) {
-      return this.followed.includes(id)
     }
   }
 }

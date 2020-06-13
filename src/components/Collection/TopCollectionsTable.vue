@@ -32,10 +32,9 @@
             <br>
             Last 30 Days: {{ collection.nrOfArticlesLast30Days }}
           </td>
-          <td class="border py-2">
-            <follow :id="collection.collectionId" v-if="!alreadyFollowed(collection.collectionId) && getCollectionName(collection.collectionId) != 'My Collection'"></follow>
-            <unfollow :id="collection.collectionId" v-if="alreadyFollowed(collection.collectionId) && getCollectionName(collection.collectionId) != 'My Collection'"></unfollow>
-          </td>
+          <td class="border pl-3 py-2">
+            <FollowUnfollowButton :collectionId="collection.collectionId"></FollowUnfollowButton>
+            </td>
         </tr>
       </tbody>
     </table>
@@ -43,11 +42,10 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import FollowButton from '@/components/Collection/FollowButton'
-import UnfollowButton from '@/components/Collection/UnfollowButton'
+import FollowUnfollowButton from '@/components/Collection/FollowUnfollowButton'
 
 export default {
-  components: { follow: FollowButton, unfollow: UnfollowButton },
+  components: { FollowUnfollowButton },
   props: {
     collections: {
       type: Array,

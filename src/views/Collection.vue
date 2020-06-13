@@ -1,28 +1,34 @@
 <template>
   <div class="container mx-auto items-center justify-center" v-if="this.getUser.initialized">
-    <div class="text-left mb-4">
-      <h1 class="text-3xl text-purple-600">{{ this.title ? this.title : 'Error.' }}</h1>
-      <hr>
+    <BaseTitle>{{ this.title ? this.title : 'Error.' }}</BaseTitle>
+    <FollowButton :id="this.id"></FollowButton>
+    <UnfollowButton :id="this.id"></UnfollowButton><br>
+    <!-- <div class="text-left mb-4">
       <a @click="$router.go(-1)" class="text-xs">back</a>
-    </div>
-
-    <div class="text-left mb-8">
-      <h1 class="text-xl text-purple-400">List of Feeds in Collection</h1>
-    </div>
+    </div> -->
+    Description:
+    Created:
+    Statistics:
+    <BaseSubtitle>List of Feeds in Collection</BaseSubtitle>
     <div>
       <feeds-table :ismycollection="isMyCollection" @unsubscribe="unsubscribe" :feeds="this.feeds"></feeds-table>
     </div>
+    <BaseSubtitle>Articles in Collection</BaseSubtitle>
   </div>
 </template>
 
 <script>
 import FeedsInCollectionTable from '@/components/Feed/FeedsInCollectionTable'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
+import FollowButton from '@/components/Collection/FollowButton'
+import UnfollowButton from '@/components/Collection/UnfollowButton'
 
 export default {
   props: ['id'],
   components: {
-    'feeds-table': FeedsInCollectionTable
+    'feeds-table': FeedsInCollectionTable,
+    FollowButton,
+    UnfollowButton
   },
   data: () => {
     return {

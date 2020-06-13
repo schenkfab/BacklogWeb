@@ -1,9 +1,6 @@
 <template>
   <div class="container mx-auto items-center justify-center" v-if="this.getUser.initialized">
-    <div class="text-left mb-4">
-      <h1 class="text-3xl text-purple-600">Add Collection</h1>
-      <hr>
-    </div>
+    <BaseTitle>Add Collection</BaseTitle>
     <p class="mb-4">Everyone has by default one collection which is private. It is being created during registration and is called "My Collection".
     </p>
     <p class="mb-8">
