@@ -1,5 +1,5 @@
 <template>
-  <nav class="flex items-center justify-between flex-wrap pl-4 border-b">
+  <nav class="flex items-center justify-between flex-wrap pl-4">
     <div class="flex items-center flex-shrink-0 mr-6">
 <svg class="h-8 fill-current inline" id="icon-bar-chart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                         fill="none" stroke="#2a2a31" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -7,23 +7,23 @@
                         <line class="bar2" x1="18" y1="20" x2="18" y2="4"></line>
                         <line class="bar3" x1="6" y1="20" x2="6" y2="16"></line>
                 </svg>
-      <span class="font-semibold text-xl tracking-tight pl-4 text-purple-800">
+      <span class="font-semibold text-3xl tracking-tight pl-4 bg-nav">
  Backlog</span>
     </div>
-    <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-      <div class="text-sm lg:flex-grow">
+    <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto pt-1">
+      <div class="lg:flex-grow">
         <router-link
-          class="block mt-4 lg:inline-block lg:mt-0 mr-2 ml-2 text-sm font-bold font-sans hover:bg-purple-800 hover:text-white p-5"
+          class="block mt-4 lg:inline-block lg:mt-0 mr-2 ml-2 font-bold font-sans hover:bg-pink-500 hover:text-white p-5"
           to="/"
         >Home</router-link>
         <router-link
           v-if="this.getUser.initialized"
-          class="block mt-4 lg:inline-block lg:mt-0 mr-2 ml-2 text-sm font-bold font-sans hover:bg-purple-800 hover:text-white p-5"
+          class="block mt-4 lg:inline-block lg:mt-0 mr-2 ml-2 font-bold font-sans hover:bg-pink-500 hover:text-white p-5"
           to="/board"
         >Board</router-link>
 
-        <a class="block lg:inline-block hoverable hover:bg-purple-800 hover:text-white p-5" v-if="this.getUser.initialized">
-          <a href="#" class="relative text-sm font-bold hover:bg-purple-800 hover:text-white">Feeds</a>
+        <a class="block lg:inline-block hoverable hover:bg-pink-500 hover:text-white p-5" v-if="this.getUser.initialized">
+          <a href="#" class="relative font-bold hover:bg-pink-500 hover:text-white">Feeds</a>
             <div class="mega-menu mb-16 sm:mb-0 shadow-xl p-6 mt-4">
               <div class="container mx-auto w-full flex flex-wrap justify-between mx-2">
                 <div class="w-full text-white mb-8">
@@ -87,16 +87,16 @@
                     <router-link
                       class="text-white bold border-b-2 border-purple-300 hover:text-purple-300"
                       to="/feeds/addrss"
-                    >Add Collection</router-link>
+                    >Add RSS Feed</router-link>
                   </div>
                 </ul>
               </div>
             </div>
         </a>
 
-        <a class="block lg:inline-block hoverable hover:bg-purple-800 hover:text-white p-5" v-if="this.getUser.initialized">
-          <a href="#" class="relative text-sm font-bold hover:bg-purple-800 hover:text-white">Collections</a>
-            <div class="mega-menu mb-16 sm:mb-0 shadow-xl p-6 mt-4">
+        <a class="block lg:inline-block hoverable hover:bg-pink-500 hover:text-white p-5" v-if="this.getUser.initialized">
+          <a href="#" class="relative font-bold hover:bg-pink-500 hover:text-white">Collections</a>
+            <div class="mega-menu mb-16 sm:mb-0 shadow-xl p-6 mt-5">
               <div class="container mx-auto w-full flex flex-wrap justify-between mx-2">
                 <div class="w-full text-white mb-8">
                   <h2 class="font-bold text-2xl">Backlog Collections</h2>
@@ -168,7 +168,7 @@
         <span v-if="this.getUser.initialized">|</span>
         <router-link
           v-if="this.getUser.initialized"
-          class="block mt-4 lg:inline-block lg:mt-0 text-purple-600 hover:text-purple-400 mr-2 ml-5 text-sm font-bold font-sans hover:bg-purple-800 hover:text-white p-5"
+          class="block mt-4 lg:inline-block lg:mt-0 text-purple-600 hover:text-purple-400 mr-2 ml-5 font-bold font-sans hover:bg-pink-500 hover:text-white p-5"
           to="/feeds"
         >Development</router-link>
       </div>
@@ -191,7 +191,7 @@
         <button
           v-if="this.getUser.initialized"
           @click="logout"
-          class="block mt-4 lg:inline-block lg:mt-0 text-sm mr-4 text-sm font-bold font-sans hover:bg-purple-800 hover:text-white p-5"
+          class="block mt-4 lg:inline-block lg:mt-0 text-sm mr-4 text-sm font-bold font-sans hover:bg-pink-500 hover:text-white p-5"
         >Logout</button>
       </div>
     </div>
@@ -227,6 +227,16 @@ export default {
 
   /* #Mega Menu Styles
   –––––––––––––––––––––––––––––––––––––––––––––––––– */
+  .bg-nav {
+    background: linear-gradient(90deg, #cd5eda 0%, #ffa200 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .color-two {
+    background: #ffa200
+  }
+
   .mega-menu {
     display: none;
     left: 0;
@@ -234,7 +244,7 @@ export default {
     text-align: left;
     width: 100%;
     background: rgb(55,13,60);
-    background: linear-gradient(90deg, rgba(55,13,60,1) 0%, rgba(88,9,121,1) 50%, rgba(255,205,0,1) 100%);
+    background: linear-gradient(90deg, #cd5eda 0%, #ffa200 100%);
   }
 
   /* #hoverable Class Styles
