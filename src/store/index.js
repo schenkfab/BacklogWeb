@@ -27,6 +27,17 @@ export default new Vuex.Store({
     followsLastLoad: null
   },
   getters: {
+    getFeedAlreadyExists: (state) => (url) => {
+      if (!url.endsWith('/')) {
+        url = url + '/'
+      }
+      var exists = state.feeds.filter(o => o.url === url)
+      if (exists && exists.length > 0) {
+        return true
+      } else {
+        return false
+      }
+    },
     getAlreadyFollowed: (state) => (collectionId) => {
       var followed = state.follows.filter(o => o.collection.id === collectionId)
       if (followed && followed.length > 0) {

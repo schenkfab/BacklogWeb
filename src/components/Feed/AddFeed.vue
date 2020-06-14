@@ -78,11 +78,25 @@
         </button>
       </div>
     </div>
+    <div v-if="alreadyExists">
+      <div
+        class="bg-red-100 border-t border-b border-red-500 text-red-700 px-4 py-3 pb-2"
+        role="alert"
+      >
+        <p
+          class="text-sm mb-4"
+        >{{ `The feed ${this.url} is already registered.` }}</p>
+        <button @click="discardError" class="bg-red-300 hover:bg-red-400 text-red-800 font-bold py-2 px-4 rounded inline-flex items-center">
+          <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg>
+          <span>Close</span>
+        </button>
+      </div>
+    </div>
   </form>
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex'
+import { mapActions, mapMutations, mapGetters } from 'vuex'
 import Parser from 'rss-parser'
 
 export default {
@@ -91,17 +105,25 @@ export default {
       url: null,
       created: false,
       title: null,
-      error: false
+      error: false,
+      alreadyExists: false
     }
+  },
+  computed: {
+    ...mapGetters(['getFeedAlreadyExists'])
   },
   methods: {
     ...mapMutations(['setLoading']),
     ...mapActions(['addFeedAsync', 'submitErrorAsync']),
     async addFeed () {
-      this.setLoading(true)
-      await this.addFeedAsync({ name: this.title, url: this.url })
-      this.created = true
-      this.setLoading(false)
+      if (this.getFeedAlreadyExists(this.url)) {
+        this.alreadyExists = true
+      } else {
+        this.setLoading(true)
+        await this.addFeedAsync({ name: this.title, url: this.url })
+        this.created = true
+        this.setLoading(false)
+      }
     },
     async getFeed () {
       this.title = null
@@ -120,6 +142,7 @@ export default {
     },
     discardError () {
       this.error = false
+      this.alreadyExists = false
     },
     submitError () {
       this.setLoading(true)
