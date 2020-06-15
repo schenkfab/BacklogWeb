@@ -22,13 +22,13 @@
 
         <a class="block lg:inline-block hoverable hover:bg-pink-500 hover:text-white p-5" v-if="this.getUser.initialized">
           <a href="#" class="relative font-bold hover:bg-pink-500 hover:text-white">Feeds</a>
-            <div class="mega-menu mb-16 sm:mb-0 shadow-xl p-6 mt-4">
+            <div class="mega-menu mb-16 sm:mb-0 shadow-xl p-6 mt-5">
               <div class="container mx-auto w-full flex flex-wrap justify-between mx-2">
                 <div class="w-full text-white mb-8">
                   <h2 class="font-bold text-2xl">Backlog Feeds</h2>
                   <p>A feed is either a RSS feed, a YouTube channel, a Twitter channel (soon), or a lot more to come, that you need to be kept up to date with.</p>
                 </div>
-                <ul class="px-4 w-full sm:w-1/2 lg:w-1/3 border-gray-600 border-b sm:border-r lg:border-b-0 pb-6 pt-6 lg:pt-3">
+                <ul class="px-4 w-full sm:w-1/2 lg:w-1/4 border-gray-600 border-b sm:border-r lg:border-b-0 pb-6 pt-6 lg:pt-3">
                   <div class="flex items-center">
                     <svg class="h-8 mb-3 mr-3 fill-current text-white"
                       xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -48,7 +48,7 @@
                     >Feeds</router-link>
                   </div>
                 </ul>
-                <ul class="px-4 w-full sm:w-1/2 lg:w-1/3 border-gray-600 border-b sm:border-r-0 lg:border-r lg:border-b-0 pb-6 pt-6 lg:pt-3">
+                <ul class="px-4 w-full sm:w-1/2 lg:w-1/4 border-gray-600 border-b sm:border-r-0 lg:border-r lg:border-b-0 pb-6 pt-6 lg:pt-3">
                   <div class="flex items-center">
                     <svg class="h-8 mb-3 mr-3 fill-current text-white"
                       xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -68,7 +68,7 @@
                     >Add YouTube Channel</router-link>
                   </div>
                 </ul>
-                <ul class="px-4 w-full sm:w-1/2 lg:w-1/3 border-gray-600 border-b sm:border-b-0 sm:border-r md:border-b-0 pb-6 pt-6 lg:pt-3">
+                <ul class="px-4 w-full sm:w-1/2 lg:w-1/4 border-gray-600 border-b sm:border-b-0 sm:border-r md:border-b-0 pb-6 pt-6 lg:pt-3">
                   <div class="flex items-center">
                     <svg class="h-8 mb-3 mr-3 fill-current text-white"
                       xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -86,6 +86,25 @@
                       class="text-white bold border-b-2 border-purple-300 hover:text-purple-300"
                       to="/feeds/addrss"
                     >Add RSS Feed</router-link>
+                  </div>
+                </ul><ul class="px-4 w-full sm:w-1/2 lg:w-1/4 border-gray-600 border-b sm:border-b-0 sm:border-r md:border-b-0 pb-6 pt-6 lg:pt-3">
+                  <div class="flex items-center">
+                    <svg class="h-8 mb-3 mr-3 fill-current text-white"
+                      xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                      <path d="M14.613,10c0,0.23-0.188,0.419-0.419,0.419H10.42v3.774c0,0.23-0.189,0.42-0.42,0.42s-0.419-0.189-0.419-0.42v-3.774H5.806c-0.23,0-0.419-0.189-0.419-0.419s0.189-0.419,0.419-0.419h3.775V5.806c0-0.23,0.189-0.419,0.419-0.419s0.42,0.189,0.42,0.419v3.775h3.774C14.425,9.581,14.613,9.77,14.613,10 M17.969,10c0,4.401-3.567,7.969-7.969,7.969c-4.402,0-7.969-3.567-7.969-7.969c0-4.402,3.567-7.969,7.969-7.969C14.401,2.031,17.969,5.598,17.969,10 M17.13,10c0-3.932-3.198-7.13-7.13-7.13S2.87,6.068,2.87,10c0,3.933,3.198,7.13,7.13,7.13S17.13,13.933,17.13,10"></path>
+                    </svg>
+                    <h3 class="font-bold text-xl text-white text-bold mb-2">Import from Feedly</h3>
+                  </div>
+                  <p class="text-gray-100 text-sm">Import the OPML XML file created with Feedly.</p>
+                  <div class="flex items-center py-3">
+                    <svg class="h-6 pr-3 fill-current text-purple-300"
+                      xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                      <path d="M20 10a10 10 0 1 1-20 0 10 10 0 0 1 20 0zm-2 0a8 8 0 1 0-16 0 8 8 0 0 0 16 0zm-8 2H5V8h5V5l5 5-5 5v-3z"/>
+                    </svg>
+                    <router-link
+                      class="text-white bold border-b-2 border-purple-300 hover:text-purple-300"
+                      to="/feeds/importopml"
+                    >Import OPML</router-link>
                   </div>
                 </ul>
               </div>
@@ -163,10 +182,10 @@
               </div>
             </div>
         </a>
-        <span v-if="this.getUser.initialized">|</span>
+
         <router-link
           v-if="this.getUser.initialized"
-          class="block mt-4 lg:inline-block lg:mt-0 text-purple-600 hover:text-purple-400 mr-2 ml-5 font-bold font-sans hover:bg-pink-500 hover:text-white p-5"
+          class="block mt-4 lg:inline-block lg:mt-0 text-purple-600 hover:text-white mr-2 ml-5 font-semibold font-sans hover:bg-pink-500 hover:text-white p-5"
           to="/feeds"
         >Development</router-link>
       </div>

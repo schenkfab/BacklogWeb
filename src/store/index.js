@@ -306,6 +306,17 @@ export default new Vuex.Store({
         }
       }
     },
+    importOPMLAsync: async ({ dispatch, state }, xml) => {
+      const options = {
+        headers: { Authorization: `Bearer ${state.token.token}` }
+      }
+      try {
+        const { data } = await axios.post(_URLs.POST_IMPORT_OPML(), { xml }, options)
+        console.log(data)
+      } catch (err) {
+        console.log(err)
+      }
+    },
     addFeedAsync: async ({ dispatch, state }, feed) => {
       const options = {
         headers: { Authorization: `Bearer ${state.token.token}` }
