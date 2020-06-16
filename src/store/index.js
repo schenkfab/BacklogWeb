@@ -9,6 +9,7 @@ const MINUTES_BETWEEN_API_CALLS = 5
 
 export default new Vuex.Store({
   state: {
+    opml: [],
     error: null,
     loading: false,
     feeds: [],
@@ -27,6 +28,9 @@ export default new Vuex.Store({
     followsLastLoad: null
   },
   getters: {
+    getOPML: (state) => {
+      return state.opml
+    },
     getFeedAlreadyExists: (state) => (url) => {
       if (!url.endsWith('/')) {
         url = url + '/'
@@ -75,6 +79,9 @@ export default new Vuex.Store({
 
   },
   mutations: {
+    setOPML (state, opml) {
+      state.opml = opml
+    },
     setCollectionStatistics (state, stats) {
       state.collectionStatistics = stats
     },
@@ -290,7 +297,7 @@ export default new Vuex.Store({
         console.log(err)
       }
     },
-    getFeedsAsync: async ({ state, commit }, force = false) => {
+    getFeedsAsync: async ({ state, commit, dispatch }, force = false) => {
       const currentTime = (new Date()).getTime()
 
       if (force || !state.feedsLastLoad || currentTime - state.feedsLastLoad > (MINUTES_BETWEEN_API_CALLS * 60000)) {
@@ -299,19 +306,56 @@ export default new Vuex.Store({
         }
         try {
           const { data } = await axios.get(_URLs.GET_FEED(), options)
+
           commit('setFeedsLastLoad', currentTime)
           commit('setFeeds', data)
         } catch (err) {
+          dispatch('getFeedsAsync', true)
           console.log(err)
         }
       }
     },
-    importOPMLAsync: async ({ dispatch, state }, xml) => {
+    submitOPMLAsync: async ({ commit, dispatch, state }, opml) => {
+      opml.forEach(async collection => {
+        if (collection.checked) {
+          // Add collection and all feeds that are checked.
+          await dispatch('addCollectionAsync', { name: collection.title, description: '', isPrivate: collection.private })
+          var createdCollection = state.collections.filter(o => {
+            return o.name === collection.title && o.userId === state.user.id && o.isPrivate === collection.private
+          })[0]
+          collection.feeds.forEach(async feed => {
+            if (feed.error) {
+
+            } else {
+              if (feed.checked) {
+                await dispatch('addFeedAsync', { name: feed.title, url: feed.xmlUrl })
+                var createdFeed = state.feeds.filter(o => o.url === feed.xmlUrl)[0]
+                dispatch('addFeedToCollectionAsyncNoRefresh', { FeedId: createdFeed.id, CollectionId: createdCollection.id })
+              }
+            }
+          })
+        }
+      })
+      await Promise.all([dispatch('getFeedsAsync', true), dispatch('getCollectionsAsync', true), dispatch('getFollowsAsync', true)])
+    },
+    importOPMLAsync: async ({ commit, state }, xml) => {
       const options = {
         headers: { Authorization: `Bearer ${state.token.token}` }
       }
       try {
         const { data } = await axios.post(_URLs.POST_IMPORT_OPML(), { xml }, options)
+        data.forEach((o, i) => {
+          o.private = false
+          o.error = null
+          o.checked = true
+          o.id = i
+          o.feeds.forEach((f, j) => {
+            f.checked = true
+            f.id = j
+          })
+        })
+
+        commit('setOPML', data)
         console.log(data)
       } catch (err) {
         console.log(err)
@@ -321,13 +365,17 @@ export default new Vuex.Store({
       const options = {
         headers: { Authorization: `Bearer ${state.token.token}` }
       }
-      try {
-        await axios.post(_URLs.POST_FEED(), feed, options)
-      } catch (err) {
-        console.log(err)
+      var existingFeed = state.feeds.filter(o => o.url === feed.url)
+      if (existingFeed && existingFeed.length > 0) {
+        // Report error, as it already exist, or have it silent? tbd..
+      } else {
+        try {
+          await axios.post(_URLs.POST_FEED(), feed, options)
+        } catch (err) {
+          console.log(err)
+        }
+        await dispatch('getFeedsAsync', true)
       }
-
-      dispatch('getFeedsAsync', true)
     },
     getUserAsync: async ({ commit, state }, force = false) => {
       // var userData = null
@@ -372,6 +420,12 @@ export default new Vuex.Store({
       }
       await axios.post(_URLs.POST_AddFeedToCollection(), obj, options)
       await Promise.all([dispatch('getFeedsAsync', true), dispatch('getCollectionsAsync', true), dispatch('getFollowsAsync', true)])
+    },
+    addFeedToCollectionAsyncNoRefresh: async ({ dispatch, state }, obj) => {
+      const options = {
+        headers: { Authorization: `Bearer ${state.token.token}` }
+      }
+      await axios.post(_URLs.POST_AddFeedToCollection(), obj, options)
     },
     removeFeedFromCollectionAsync: async ({ dispatch, state }, { feedId, collectionId }) => {
       const options = {

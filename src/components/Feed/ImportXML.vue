@@ -9,15 +9,13 @@
       </div>
       <div>
         <textarea
-          placeholder="https://cloudblogs.microsoft.com/sqlserver/feed/"
           class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
           type="text"
           v-model="xml"
         />
       </div>
-      <div class="md:w-1/4 md:items-center">
-        <div class="md:w-1/3"></div>
-        <div class="md:w-2/3">
+      <div class="items-center">
+        <div>
           <button
             class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
             type="button"
@@ -25,6 +23,55 @@
           >Check Feeds</button>
         </div>
       </div>
+      <div>
+        <BaseSubtitle>Result</BaseSubtitle>
+        <table class="table-auto w-full">
+      <thead>
+        <tr>
+          <th class="px-4 py-2">Collection</th>
+          <th class="px-4 py-2">Feed</th>
+          <th class="px-4 py-2">Url</th>
+          <th class="px-4 py-2">Error</th>
+          <th class="px-4 py-2 w-24">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template v-for="collection in this.opml">
+          <tr :key="collection.id">
+            <td class="border px-4 py-2 text-sm">
+              <input class="border" v-model="collection.title"></td>
+            <td class="px-4 py-2"></td>
+            <td class="px-4 py-2 text-xs"></td>
+            <td class="px-4 py-2 text-xs">{{ collection.error ? collection.error : '' }}</td>
+            <td class="px-4 py-2 text-xs">
+              <input type="checkbox" id="checkbox" v-model="collection.checked" @change="check($event, collection.feeds)">
+              <label> Add</label>
+<br>
+              <input type="checkbox" id="checkbox" v-model="collection.private">
+              <label> Private</label>
+            </td>
+          </tr>
+          <tr v-for="feed in collection.feeds" :key="feed.xmlUrl">
+            <td class="border px-4 py-2"></td>
+            <td class="border px-4 py-2 text-sm">{{ feed.title }}</td>
+            <td class="border px-4 py-2 text-xs">{{ feed.xmlUrl }}</td>
+            <td class="border px-4 py-2 text-xs">{{ feed.error ? feed.error : '' }}</td>
+            <td class="border px-4 py-2 text-xs">
+              <input type="checkbox" :id="feed.id" v-model="feed.checked">
+              <label :for="feed.id">{{ feed.error ? " Report" : " Add" }}</label>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+      </div>
+      <div>
+          <button v-if="this.opml"
+            class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold mt-2 py-2 px-4 rounded"
+            type="button"
+            @click="submit"
+          >Submit</button>
+        </div>
     </div>
 
     <div v-if="created">
@@ -81,15 +128,19 @@ export default {
       created: false,
       title: null,
       error: false,
-      alreadyExists: false
+      alreadyExists: false,
+      opml: null
     }
   },
+  mounted () {
+    this.getCollectionsAsync()
+  },
   computed: {
-    ...mapGetters(['getFeedAlreadyExists'])
+    ...mapGetters(['getFeedAlreadyExists', 'getOPML', 'getCollections', 'getUser'])
   },
   methods: {
     ...mapMutations(['setLoading']),
-    ...mapActions(['addFeedAsync', 'submitErrorAsync', 'importOPMLAsync']),
+    ...mapActions(['addFeedAsync', 'submitErrorAsync', 'importOPMLAsync', 'submitOPMLAsync', 'getCollectionsAsync']),
     async addFeed () {
       if (this.getFeedAlreadyExists(this.url)) {
         this.alreadyExists = true
@@ -100,14 +151,47 @@ export default {
         this.setLoading(false)
       }
     },
+    async submit () {
+      this.setLoading(true)
+      var hasError = false
+      // first check for names already present...
+      this.opml.forEach(o => {
+        if (o.private) {
+          console.log(this.getUser)
+          if (this.getCollections.filter(collection => collection.name === o.title && collection.isPrivate === true && collection.userId === this.getUser.id).length > 0) {
+            o.error = 'A collection with this name already exists in your private collection list.'
+            hasError = true
+          } else {
+            o.error = null
+          }
+        } else {
+          if (this.getCollections.filter(collection => collection.name === o.title && collection.isPrivate === false).length > 0) {
+            o.error = 'A collection with this name already exists. Please make it private or choose another name.'
+            hasError = true
+          } else {
+            o.error = null
+          }
+        }
+      })
+      if (!hasError) {
+        await this.submitOPMLAsync(this.opml)
+      }
+      this.setLoading(false)
+    },
     async getFeed () {
       this.setLoading(true)
       await this.importOPMLAsync(this.xml)
+      this.opml = this.getOPML
       this.setLoading(false)
     },
     discardError () {
       this.error = false
       this.alreadyExists = false
+    },
+    check (e, collection) {
+      collection.forEach(o => {
+        o.checked = e.target.checked
+      })
     },
     submitError () {
       this.setLoading(true)
