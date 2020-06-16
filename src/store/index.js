@@ -310,7 +310,6 @@ export default new Vuex.Store({
           commit('setFeedsLastLoad', currentTime)
           commit('setFeeds', data)
         } catch (err) {
-          dispatch('getFeedsAsync', true)
           console.log(err)
         }
       }
