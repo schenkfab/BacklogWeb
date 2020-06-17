@@ -41,11 +41,17 @@ export default {
       this.$router.push('/board/' + id).catch(err => { console.log(err) })
     }
   },
+  watch: {
+    followId: function (val) {
+      this.setSelected(this.getFollows.filter(o => o.id === parseInt(this.followId))[0])
+    }
+  },
   async mounted () {
     this.setLoading(true)
     await this.getCollectionsAsync()
     await this.getFollowsAsync()
     if (this.followId) {
+      console.log('test')
       this.setSelected(this.getFollows.filter(o => o.id === parseInt(this.followId))[0])
     }
     this.setLoading(false)
