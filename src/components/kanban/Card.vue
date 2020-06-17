@@ -32,6 +32,14 @@
         </div>
         <div v-if="this.isBig" class="text-xs text-left" v-html="data.description"></div>
         <p class="text-purple-600 font-sans text-xs">{{(new Date(data.date)).toLocaleDateString()}} - {{ getFeedNameShort(data.feed.name) }}</p>
+        <div v-if="this.isBig" class="text-xs">
+          <span>Move to: </span>
+          <button @click="moveTo('Backlog')" class="m-1 border p-1 text-gray-600" v-if="this.board !== 'Backlog'">Backlog</button>
+          <button @click="moveTo('To Do')" class="m-1 border p-1 text-purple-600" v-if="this.board !== 'To Do'">To Do</button>
+          <button @click="moveTo('In Progress')" class="m-1 border p-1 text-blue-600" v-if="this.board !== 'In Progress'">In Progress</button>
+          <button @click="moveTo('Done')" class="m-1 border p-1 text-green-600" v-if="this.board !== 'Done'">Done</button>
+          <button @click="moveTo('Rejected')" class="m-1 border p-1 text-red-600" v-if="this.board !== 'Rejected'">Rejected</button>
+        </div>
     </li>
 </template>
 <script>
@@ -49,6 +57,14 @@ export default {
     data: {
       type: Object,
       default: () => ({})
+    },
+    board: {
+      type: String,
+      default: () => ('Backlog')
+    },
+    itemId: {
+      type: Number,
+      default: () => (-1)
     }
   },
   computed: {
@@ -57,6 +73,9 @@ export default {
     }
   },
   methods: {
+    moveTo (destination) {
+      this.$emit('updateTxt', this.itemId, destination)
+    },
     more () {
       this.isBig = !this.isBig
     },

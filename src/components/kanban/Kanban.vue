@@ -1,13 +1,12 @@
 <template>
   <div>
-    <button class="text-gray-700 border-gray-400 mb-2 text-xs" @click="forceRefresh">Refresh</button>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4" v-if="this.getUser.initialized">
-        <column :entities="backlog" @onUpdate="update" title="Backlog" color="gray" @onExternalLink="triggerExternalLink" />
-        <column :entities="toDo" @onUpdate="update" title="To Do" color="purple" @onExternalLink="triggerExternalLink"/>
-        <column :entities="inProgress" @onUpdate="update" title="In Progress" color="blue" @onExternalLink="triggerExternalLink"/>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" v-if="this.getUser.initialized">
+        <column :entities="backlog" @onUpdate="update" @updateTxt="updateTxt" title="Backlog" color="gray" @onExternalLink="triggerExternalLink" />
+        <column :entities="toDo" @onUpdate="update" @updateTxt="updateTxt" title="To Do" color="purple" @onExternalLink="triggerExternalLink"/>
+        <column :entities="inProgress" @onUpdate="update" @updateTxt="updateTxt" title="In Progress" color="blue" @onExternalLink="triggerExternalLink"/>
         <div>
-          <column :entities="done" @onUpdate="update" title="Done" color="green" @onExternalLink="triggerExternalLink"/>
-          <column :entities="rejected" @onUpdate="update" title="Rejected" color="red" @onExternalLink="triggerExternalLink"/>
+          <column :entities="done" @onUpdate="update" @updateTxt="updateTxt" title="Done" color="green" @onExternalLink="triggerExternalLink"/>
+          <column :entities="rejected" @onUpdate="update" @updateTxt="updateTxt" title="Rejected" color="red" @onExternalLink="triggerExternalLink"/>
         </div>
     </div>
   </div>
@@ -34,14 +33,52 @@ export default {
     }
   },
   methods: {
-    async forceRefresh () {
-      this.setLoading(true)
-      await this.getUserAsync(true)
-      this.setLoading(false)
-    },
     triggerExternalLink (entity) {
       var win = window.open(entity.link, '_blank')
       win.focus()
+    },
+    async updateTxt (id, board) {
+      var obj = this.follow.boardItems.filter(x => x.id === id)[0]
+
+      let status = 0
+      if (board === 'Backlog') {
+        status = 0
+        this.follow.backlog.push(obj)
+      } else if (board === 'To Do') {
+        status = 1
+        this.follow.toDo.push(obj)
+      } else if (board === 'In Progress') {
+        status = 2
+        this.follow.inProgress.push(obj)
+      } else if (board === 'Done') {
+        status = 3
+        this.follow.done.push(obj)
+      } else if (board === 'Rejected') {
+        status = 4
+        this.follow.rejected.push(obj)
+      }
+
+      if (obj.status === 0) {
+        this.follow.backlog = this.follow.backlog.filter(x => x.id !== id)
+      }
+      if (obj.status === 1) {
+        this.follow.toDo = this.follow.toDo.filter(x => x.id !== id)
+      }
+      if (obj.status === 2) {
+        this.follow.inProgress = this.follow.inProgress.filter(x => x.id !== id)
+      }
+      if (obj.status === 3) {
+        this.follow.done = this.follow.done.filter(x => x.id !== id)
+      }
+      if (obj.status === 4) {
+        this.follow.rejected = this.follow.rejected.filter(x => x.id !== id)
+      }
+
+      this.follow.boardItems.filter(x => x.id === id)[0].status = status
+
+      this.setLoading(true)
+      await this.setStatusAsync({ itemId: id, statusId: status })
+      this.setLoading(false)
     },
     update (event, board) {
       let status = 0
@@ -63,7 +100,7 @@ export default {
       this.setStatusAsync({ itemId: el.id, statusId: el.status })
     },
     ...mapActions(['getUserAsync', 'setStatusAsync', 'getBacklog', 'getFollowsAsync']),
-    ...mapMutations(['setToDo', 'setLoading'])
+    ...mapMutations(['setToDo', 'setLoading', 'setStatusForBoardItem'])
   },
   computed: {
     ...mapGetters(['getUser']),

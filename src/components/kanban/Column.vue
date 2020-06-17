@@ -16,9 +16,12 @@
         v-for="entity in entities"
         :data="entity.article"
         :key="entity.article.id"
+        :board="title"
+        :itemId="entity.id"
         @onEdit="triggerEdit"
         @onDelete="triggerDelete"
         @onExternalLink="triggerExternalLink"
+        @updateTxt="updateTxt"
       ></card>
     </draggable>
   </div>
@@ -82,6 +85,9 @@ export default {
     },
     triggerExternalLink (entity) {
       this.$emit('onExternalLink', entity)
+    },
+    updateTxt (id, destination) {
+      this.$emit('updateTxt', id, destination)
     },
     onUpdate (event, x) {
       if (event.added) {
