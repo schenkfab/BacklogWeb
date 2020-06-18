@@ -129,10 +129,6 @@ export default {
         return this.follow.rejected
       }
     }
-
-  },
-  mounted: async function () {
-    this.getFollowsAsync()
   }
 }
 </script>

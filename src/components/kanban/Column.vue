@@ -1,5 +1,5 @@
 <template>
-<div class="w-full max-w-md text-center p-1">
+<div class="w-full max-w-md text-center p-1" v-if="this.entities">
   <div :class="this.class">
     <p class="mb-2 text-gray-700 font-semibold font-sans tracking-wide">{{ title }}</p>
     <draggable
@@ -36,6 +36,11 @@ export default {
     Card,
     Draggable
   },
+  data () {
+    return {
+      data: null
+    }
+  },
   computed: {
     class: function () {
       return `w-full max-w-md text-center p-2 mb-4 bg-${this.color}-200 rounded-lg`
@@ -52,7 +57,7 @@ export default {
   props: {
     entities: {
       type: Array,
-      default: () => []
+      default: () => (null)
     },
     group: {
       type: String,

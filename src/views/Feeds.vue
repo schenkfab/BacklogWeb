@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     ...mapMutations(['setLoading']),
-    ...mapActions(['getFeedsAsync', 'getCollectionsAsync', 'addSubscriptionAsync', 'deleteSubscriptionAsync', 'getUserAsync']),
+    ...mapActions(['getFeedsAsync', 'getFeedStatisticsAsync', 'getCollectionsAsync', 'addSubscriptionAsync', 'deleteSubscriptionAsync', 'getUserAsync']),
     subscribe: async function (id) {
       await this.addSubscriptionAsync(id)
     },
@@ -43,6 +43,7 @@ export default {
   },
   mounted: async function () {
     this.setLoading(true)
+    await this.getFeedStatisticsAsync()
     await this.getFeedsAsync()
     await this.getCollectionsAsync()
     this.setLoading(false)

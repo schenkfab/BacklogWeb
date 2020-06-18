@@ -40,6 +40,9 @@ module.exports = {
   GET_FOLLOWS () {
     return `${API_HOST}/api/follows`
   },
+  GET_FOLLOW (id) {
+    return `${API_HOST}/api/follows/${id}`
+  },
   POST_FOLLOW () {
     return `${API_HOST}/api/follows`
   },
@@ -51,6 +54,9 @@ module.exports = {
   },
   GET_CollectionStatistics () {
     return `${API_HOST}/api/collections/statistics`
+  },
+  GET_FeedStatistics () {
+    return `${API_HOST}/api/feeds/statistics`
   },
   DELETE_RemoveFeedFromCollection (feedId, collectionId) {
     return `${API_HOST}/api/collections/removefeedfromcollection/${collectionId}/${feedId}`

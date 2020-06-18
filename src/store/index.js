@@ -22,6 +22,8 @@ export default new Vuex.Store({
     collections: [],
     collectionsLastLoad: null,
     mycollections: [],
+    feedStatistics: [],
+    feedStatisticsLastLoad: null,
     collectionStatistics: [],
     collectionStatisticsLastLoad: null,
     follows: [],
@@ -52,6 +54,9 @@ export default new Vuex.Store({
     },
     getCollectionStatistics: (state) => {
       return state.collectionStatistics
+    },
+    getFeedStatistics: (state) => {
+      return state.feedStatistics
     },
     getCollectionName: (state) => (id) => {
       const collection = state.collections.filter(o => o.id === parseInt(id))[0]
@@ -85,11 +90,26 @@ export default new Vuex.Store({
     setCollectionStatistics (state, stats) {
       state.collectionStatistics = stats
     },
+    setFeedStatistics (state, stats) {
+      state.feedStatistics = stats
+    },
     setCollectionStatisticsLastLoad (state, lastLoad) {
       state.collectionStatisticsLastLoad = lastLoad
     },
+    setFeedStatisticsLastLoad (state, lastLoad) {
+      state.feedStatisticsLastLoad = lastLoad
+    },
     setFollows (state, follows) {
       state.follows = follows
+    },
+    setFollow (state, { id, data }) {
+      var x = state.follows.filter(x => x.id === parseInt(id))[0]
+      x.boardItems = data.boardItems
+      x.backlog = data.backlog
+      x.toDo = data.toDo
+      x.inProgress = data.inProgress
+      x.done = data.done
+      x.rejected = data.rejected
     },
     setCollections (state, collections) {
       state.collections = collections
@@ -148,7 +168,7 @@ export default new Vuex.Store({
     getCollectionStatisticsAsync: async ({ commit, state }, force = false) => {
       const currentTime = (new Date()).getTime()
 
-      if (force || !state.followsLastLoad || currentTime - state.followsLastLoad > (MINUTES_BETWEEN_API_CALLS * 60000)) {
+      if (force || !state.collectionStatisticsLastLoad || currentTime - state.followsLastLoad > (MINUTES_BETWEEN_API_CALLS * 60000)) {
         const options = {
           headers: { Authorization: `Bearer ${state.token.token}` }
         }
@@ -160,6 +180,92 @@ export default new Vuex.Store({
         } catch (err) {
           console.log(err)
         }
+      }
+    },
+    getFeedStatisticsAsync: async ({ commit, state, dispatch }, force = false) => {
+      const currentTime = (new Date()).getTime()
+
+      if (force || !state.feedStatisticsLastLoad || currentTime - state.followsLastLoad > (MINUTES_BETWEEN_API_CALLS * 60000)) {
+        const options = {
+          headers: { Authorization: `Bearer ${state.token.token}` }
+        }
+        try {
+          const { data } = await axios.get(_URLs.GET_FeedStatistics(), options)
+          if (state.feeds.length === 0) {
+            await dispatch('getFeedsAsync', true)
+          }
+          var feeds = state.feeds
+          data.forEach(x => {
+            if (feeds.filter(f => f.id === x.id).length > 0) {
+              feeds.filter(f => f.id === x.id)[0].nrOfArticles = x.nrOfArticles
+              feeds.filter(f => f.id === x.id)[0].nrOfArticlesLast7Days = x.nrOfArticlesLast7Days
+            }
+          })
+
+          commit('setFeeds', feeds)
+          commit('setFeedStatistics', data)
+          commit('setFeedStatisticsLastLoad', currentTime)
+        } catch (err) {
+          console.log(err)
+        }
+      }
+    },
+    getFollowAsync: async ({ commit, state }, id) => {
+      const options = {
+        headers: { Authorization: `Bearer ${state.token.token}` }
+      }
+      try {
+        const { data } = await axios.get(_URLs.GET_FOLLOW(id), options)
+
+        var backlog = []
+        var toDo = []
+        var inProgress = []
+        var done = []
+        var rejected = []
+
+        data.boardItems.forEach(o => {
+          if (o.status === 0) {
+            backlog.push(o)
+          } else if (o.status === 1) {
+            toDo.push(o)
+          } else if (o.status === 2) {
+            inProgress.push(o)
+          } else if (o.status === 3) {
+            done.push(o)
+          } else if (o.status === 4) {
+            rejected.push(o)
+          }
+        })
+
+        const compare = function (a, b) {
+          if (a.article.date < b.article.date) {
+            return 1
+          }
+          if (a.article.date > b.article.date) {
+            return -1
+          }
+          return 0
+        }
+        const backlogOrdered = backlog.sort(compare)
+
+        data.backlog = backlogOrdered
+        data.toDo = toDo
+        data.inProgress = inProgress
+        data.done = done
+        data.rejected = rejected
+
+        var follows = state.follows
+        var x = follows.filter(x => x.id === parseInt(id))[0]
+        x.boardItems = data.boardItems
+        x.backlog = data.backlog
+        x.toDo = data.toDo
+        x.inProgress = data.inProgress
+        x.done = data.done
+        x.rejected = data.rejected
+
+        commit('setFollows', follows)
+      } catch (ex) {
+        console.log(ex)
       }
     },
     // Follows
@@ -180,36 +286,37 @@ export default new Vuex.Store({
             var done = []
             var rejected = []
 
-            x.boardItems.forEach(o => {
-              if (o.status === 0) {
-                backlog.push(o)
-              } else if (o.status === 1) {
-                toDo.push(o)
-              } else if (o.status === 2) {
-                inProgress.push(o)
-              } else if (o.status === 3) {
-                done.push(o)
-              } else if (o.status === 4) {
-                rejected.push(o)
-              }
-            })
+            //   x.boardItems.forEach(o => {
+            //     if (o.status === 0) {
+            //       backlog.push(o)
+            //     } else if (o.status === 1) {
+            //       toDo.push(o)
+            //     } else if (o.status === 2) {
+            //       inProgress.push(o)
+            //     } else if (o.status === 3) {
+            //       done.push(o)
+            //     } else if (o.status === 4) {
+            //       rejected.push(o)
+            //     }
+            //   })
 
-            const compare = function (a, b) {
-              if (a.article.date < b.article.date) {
-                return 1
-              }
-              if (a.article.date > b.article.date) {
-                return -1
-              }
-              return 0
-            }
-            const backlogOrdered = backlog.sort(compare)
+            //   const compare = function (a, b) {
+            //     if (a.article.date < b.article.date) {
+            //       return 1
+            //     }
+            //     if (a.article.date > b.article.date) {
+            //       return -1
+            //     }
+            //     return 0
+            //   }
+            //   const backlogOrdered = backlog.sort(compare)
 
-            x.backlog = backlogOrdered
+            x.backlog = backlog
             x.toDo = toDo
             x.inProgress = inProgress
             x.done = done
             x.rejected = rejected
+            x.boardItems = []
           })
 
           commit('setFollows', data)
@@ -307,8 +414,13 @@ export default new Vuex.Store({
         try {
           const { data } = await axios.get(_URLs.GET_FEED(), options)
 
-          commit('setFeedsLastLoad', currentTime)
+          data.forEach(x => {
+            x.NrOfArticles = 0
+            x.NrOfArticlesLast7Days = 0
+          })
           commit('setFeeds', data)
+
+          commit('setFeedsLastLoad', currentTime)
         } catch (err) {
           console.log(err)
         }
