@@ -12,11 +12,11 @@ import { mapMutations, mapActions } from 'vuex'
 export default {
   methods: {
     ...mapMutations(['setLoading']),
-    ...mapActions(['getFeedsAsync', 'getCollectionsAsync', 'getCollectionStatisticsAsync', 'getBoardsAsync', 'getFollowsAsync'])
+    ...mapActions(['getFeedsAsync', 'getCollectionsAsync', 'getCollectionStatisticsAsync', 'getFollowsAsync'])
   },
   mounted: async function () {
     this.setLoading(true)
-    await Promise.all([this.getFeedsAsync(), this.getCollectionsAsync(), this.getFollowsAsync(), this.getBoardsAsync(), this.getCollectionStatisticsAsync()])
+    await Promise.all([this.getFeedsAsync(), this.getCollectionsAsync(), this.getFollowsAsync(), this.getCollectionStatisticsAsync()])
     this.setLoading(false)
   }
 }
