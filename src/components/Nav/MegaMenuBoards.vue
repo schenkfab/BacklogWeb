@@ -37,7 +37,7 @@
                 <router-link
                   class="text-white text-xs bold border-b-2 border-purple-300 hover:text-purple-300"
                   :to='`/board/${follow.id}`'
-                >{{ getCollectionName(follow.collection.id) }}</router-link>
+                >{{ getCollectionName(follow.collection.id) }} {{ follow.newItems > 0 ? `(${follow.newItems})` : '' }}</router-link>
               </div>
             </div>
           </ul>
