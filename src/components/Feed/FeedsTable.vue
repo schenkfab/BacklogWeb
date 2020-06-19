@@ -1,5 +1,8 @@
 <template>
-  <table class="table-auto w-full" v-if="this.feeds">
+  <div class="text-center">
+    <label for="searchstring" class="text-sm">Search: </label>
+    <input id="searchstring" type="text" class="w-3/4 text-sm border m-2 p-1 rounded-md" v-model="searchString" />
+    <table class="table-auto text-left w-full" v-if="this.feeds">
       <thead>
         <tr>
           <th class="px-4 py-2">Name</th>
@@ -9,7 +12,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="feed in this.feeds" :key="feed.id">
+        <tr v-for="feed in this.feeds.filter(o => o.name.includes(this.searchString) || o.url.includes(this.searchString))" :key="feed.id">
           <td class="border px-4 py-2">{{ feed.name }}<br><a class="text-xs" :href="feed.url" target="_blank">{{ feed.url }}</a></td>
           <td class="border px-4 py-2 text-xs">Nr of Articles: {{ feed.nrOfArticles }}<br>Nr of Articles Last 7 Days: {{ feed.nrOfArticlesLast7Days }}<br></td>
           <td class="border px-4 py-2">{{ new Date(feed.lastCrawl).toLocaleString() }}</td>
@@ -23,12 +26,18 @@
         </tr>
       </tbody>
     </table>
+  </div>
 </template>
 
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 
 export default {
+  data () {
+    return {
+      searchString: ''
+    }
+  },
   props: {
     feeds: {
       type: Array,
