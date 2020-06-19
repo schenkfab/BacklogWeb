@@ -1,7 +1,7 @@
 <template>
   <div class="pl-2 pr-2">
-    <button class="border rounded-full m-1 p-2 text-xs hover:bg-pink-500 hover:text-white" v-for="follow in this.getFollows.filter(f => f.collection.isPrivate)" v-bind:key="follow.id" @click="setFollow(follow.id)">{{ getCollectionName(follow.collection.id) }} {{ follow.collection.isPrivate ? '(P)' : '' }}</button>
-    <button class="border rounded-full m-1 p-2 text-xs hover:bg-pink-500 hover:text-white" v-for="follow in this.getFollows.filter(f => !f.collection.isPrivate)" v-bind:key="follow.id" @click="setFollow(follow.id)">{{ getCollectionName(follow.collection.id) }} {{ follow.collection.isPrivate ? '(P)' : '' }}</button>
+    <button class="border rounded-full m-1 p-1 px-2 text-xs hover:bg-pink-500 hover:text-white" v-for="follow in this.getFollows.filter(f => f.collection.isPrivate)" v-bind:key="follow.id" @click="setFollow(follow.id)">{{ getCollectionName(follow.collection.id) }} {{ follow.collection.isPrivate ? '(P)' : '' }}</button>
+    <button class="border rounded-full m-1 p-1 px-2 text-xs hover:bg-pink-500 hover:text-white" v-for="follow in this.getFollows.filter(f => !f.collection.isPrivate)" v-bind:key="follow.id" @click="setFollow(follow.id)">{{ getCollectionName(follow.collection.id) }} {{ follow.collection.isPrivate ? '(P)' : '' }}</button>
     <hr>
     <kanban :follow="this.selected"></kanban>
   </div>
