@@ -1,5 +1,6 @@
 <template>
   <div>
+    <BaseSubtitle>{{ getCollectionName(follow.collection.id) }}</BaseSubtitle>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" v-if="this.getUser.initialized">
         <column :entities="backlog" @onUpdate="update" @updateTxt="updateTxt" title="Backlog" color="gray" @onExternalLink="triggerExternalLink" />
         <column :entities="toDo" @onUpdate="update" @updateTxt="updateTxt" title="To Do" color="purple" @onExternalLink="triggerExternalLink"/>
@@ -103,7 +104,7 @@ export default {
     ...mapMutations(['setToDo', 'setLoading', 'setStatusForBoardItem'])
   },
   computed: {
-    ...mapGetters(['getUser']),
+    ...mapGetters(['getUser', 'getCollectionName']),
     backlog: {
       get () {
         return this.follow.backlog
