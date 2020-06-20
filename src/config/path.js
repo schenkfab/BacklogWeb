@@ -34,6 +34,9 @@ module.exports = {
   POST_COLLECTION () {
     return `${API_HOST}/api/collections`
   },
+  PUT_COLLECTION () {
+    return `${API_HOST}/api/collections`
+  },
   POST_IMPORT_OPML () {
     return `${API_HOST}/api/feeds/importopml`
   },

@@ -581,6 +581,18 @@ export default new Vuex.Store({
       }
 
       dispatch('getCollectionsAsync', true)
+    },
+    updateCollectionAsync: async ({ dispatch, state }, { id, name, description, isPrivate }) => {
+      const options = {
+        headers: { Authorization: `Bearer ${state.token.token}` }
+      }
+      var obj = {
+        id: parseInt(id), name, description, language: null, isPrivate
+      }
+
+      await axios.put(_URLs.PUT_COLLECTION(), obj, options)
+      await dispatch('getCollectionAsync', true)
+      await dispatch('getCollectionStatisticsAsync', true)
     }
   }
 })
