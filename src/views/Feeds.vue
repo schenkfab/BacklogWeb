@@ -43,8 +43,8 @@ export default {
   },
   mounted: async function () {
     this.setLoading(true)
-    await this.getFeedStatisticsAsync()
     await this.getFeedsAsync()
+    await this.getFeedStatisticsAsync()
     await this.getCollectionsAsync()
     this.setLoading(false)
   }
