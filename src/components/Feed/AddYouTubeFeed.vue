@@ -78,14 +78,19 @@
         </button>
       </div>
     </div>
+    <FeedsTable v-if="this.created" :feeds="this.getFeeds.filter(o => o.name === this.title)"></FeedsTable>
   </form>
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex'
+import { mapActions, mapMutations, mapGetters } from 'vuex'
 import Parser from 'rss-parser'
+import FeedsTable from './FeedsTable'
 
 export default {
+  components: {
+    FeedsTable
+  },
   data: () => {
     return {
       url: null,
@@ -93,6 +98,9 @@ export default {
       title: null,
       error: false
     }
+  },
+  computed: {
+    ...mapGetters(['getFeeds'])
   },
   methods: {
     ...mapMutations(['setLoading']),

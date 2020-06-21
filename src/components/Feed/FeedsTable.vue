@@ -42,18 +42,10 @@ export default {
     feeds: {
       type: Array,
       default: () => ([])
-    },
-    mycollections: {
-      type: Array,
-      default: () => ([])
-    },
-    subscribed: {
-      type: Array,
-      default: () => ([])
     }
   },
   computed: {
-    ...mapGetters(['getUser'])
+    ...mapGetters(['getUser', 'getMyCollections'])
   },
   methods: {
     ...mapActions(['addFeedToCollectionAsync']),
@@ -61,7 +53,7 @@ export default {
     getCollectionsForFeed: function (feed) {
       var x = []
 
-      this.mycollections.forEach(all => {
+      this.getMyCollections.forEach(all => {
         var alreadyAdded = false
         feed.feedInCollections.forEach(current => {
           if (current.collectionId === all.id) {

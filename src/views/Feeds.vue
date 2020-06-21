@@ -6,7 +6,7 @@
     </p>
     <BaseSubtitle>List of Feeds</BaseSubtitle>
     <div>
-      <feeds-table :mycollections="getMyCollections" @subscribe="subscribe" @unsubscribe="unsubscribe" :feeds="this.getFeeds" :subscribed="this.getSubscribed"></feeds-table>
+      <feeds-table :feeds="this.getFeeds"></feeds-table>
     </div>
   </div>
 </template>
@@ -23,7 +23,7 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters(['getFeeds', 'getSubscribed', 'getUser', 'getMyCollections'])
+    ...mapGetters(['getFeeds', 'getSubscribed', 'getUser'])
   },
   methods: {
     ...mapMutations(['setLoading']),
