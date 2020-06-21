@@ -9,7 +9,7 @@
       <div class="flex flex-row p-2" v-if="isMyCollection && this.name !== 'My Collection'">
         <div class="w-32 my-1 py-1">Name</div>
         <div class="w-full">
-          <input type="text" class="w-full border p-1 m-1 rounded-md" v-model="name">
+          <BaseTextInput v-model="name" class="w-full" />
         </div>
       </div>
       <div class="flex flex-row p-2" v-if="!isMyCollection || this.name === 'My Collection'">
@@ -21,7 +21,7 @@
       <div class="flex flex-row p-2 w-full" v-if="isMyCollection && this.name !== 'My Collection'">
         <div class="w-32 my-1 py-1">Description</div>
         <div class="w-full" >
-          <input type="text" class="w-full border p-1 m-1 rounded-md" v-model="description">
+          <BaseTextInput v-model="description" class="w-full" />
         </div>
       </div>
       <div class="flex flex-row p-2 w-full" v-if="!isMyCollection || this.name === 'My Collection'">
